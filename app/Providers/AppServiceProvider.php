@@ -20,7 +20,10 @@ use App\ReadyFunctions\CalculateLoanService;
 use App\ReadyFunctions\CalculateLoanWithdrawal;
 use App\ReadyFunctions\CalculateProfitsEquations;
 use App\ReadyFunctions\Date;
+use App\ReadyFunctions\ExpensesTypes\FixedRepeatingWithInflation;
+use App\ReadyFunctions\ExpensesTypes\IntervallyRepeatingAmount;
 use App\ReadyFunctions\ExpensesTypes\MonthlyFixedRepeating;
+use App\ReadyFunctions\ExpensesTypes\MonthlyVaryingExpense;
 use App\ReadyFunctions\InstallmentMethod ;
 use App\ReadyFunctions\ProjectsUnderProgress;
 use App\ReadyFunctions\SCurveService;
@@ -94,6 +97,7 @@ class AppServiceProvider extends ServiceProvider
 		if(is_numeric($financialPlanId) && $isFinancialPlanUrl ){
 			$financialPlan = FinancialPlan::find($financialPlanId);
 			if($financialPlan){
+				
 				$studyDates = $financialPlan->getStudyDates() ;
 				$studyStartDate = Arr::first($studyDates);
 				$studyEndDate = Arr::last($studyDates);
@@ -132,7 +136,7 @@ class AppServiceProvider extends ServiceProvider
 		// dd($dateWithMonthNumber);
 			
 		// dd($dateIndexWithMonthNumber);
-		$monthlyFixedRepeating = new MonthlyFixedRepeating();
+		$monthlyFixedRepeating = new FixedRepeatingWithInflation();
 		$expenses = Expenses::get();
 		$financialPlan =FinancialPlan::first();
 		$operationDates = (array)json_decode($financialPlan->operation_dates);
@@ -143,7 +147,16 @@ class AppServiceProvider extends ServiceProvider
 		$dates = $financialPlan->convertStringDatesFromArrayKeysToIndexes(array_flip($operationDates),$datesAsStringAndIndex);
 		// dd($dates);
 		// dd($dateWithMonthNumber);
-		// $result = $monthlyFixedRepeating->calculate($expenses,$dates,$dateIndexWithMonthNumber,$dateWithMonthNumber );
+		// dd($dates);
+		// $result = $monthlyFixedRepeating->calculate($expenses,'annually',Carbon::make($financialPlan->getStudyEndDate()) );
+		// dd()
+		$expenses = Expenses::where('id',386)->get();
+		// dd($financialPlan);
+		// dd(Carbon::make($financialPlan->getStudyEndDate()));
+		$result = (new IntervallyRepeatingAmount())->calculate($expenses,Carbon::make($financialPlan->getStudyEndDate()));
+		dd($result);
+		
+		
 		// dd($result);
 		
 		View::share('langs', Language::all());

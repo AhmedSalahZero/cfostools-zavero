@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\FinancialPlan;
 use App\Models\IncomeStatement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 //ManufacturingExpenses 
 // SalesExpenses
@@ -12,15 +14,23 @@ use Illuminate\Http\Request;
 // MarketExpense
 class ExpenseController 
 {
-	public function create(Company $company,$expenseType)
+	public function create(Company $company,FinancialPlan $financialPlan,$expenseType)
 	{
-		$model = IncomeStatement::first();
+		// dd($financialPlan);
+		// $model = IncomeStatement::first();
+		// model here must be financialPlan not incomestatement 
+		// and dates must be from operation start date to study end date
+		$model = $financialPlan;
+		$operationStartDate = Carbon::make($financialPlan->getOperationStartDate());
+		$studyEndDate = Carbon::make($financialPlan->getStudyEndDate());
+			$dates = generateDatesBetweenTwoDates($operationStartDate,$studyEndDate,'addMonth','M\'Y', false, 'Y-m-d');
+		
 		return view('admin.expense.expense',[
 			'company'=>$company , 
 			'pageTitle'=>__(preg_replace('/(?<!\ )[A-Z]/', ' $0', $expenseType)),
-			'storeRoute'=>route('admin.store.expense',['company'=>$company->id,'expenseType'=>$expenseType]),
+			'storeRoute'=>route('admin.store.expense',['company'=>$company->id,'expenseType'=>$expenseType,'financialPlan'=>$financialPlan->id]),
 			'type'=>'create',
-			'dates'=>$model->getIntervalFormatted()	,
+			'dates'=>$dates	,
 			'category'=>'expense',
 			'model'=>$model ,
 			'expenseType'=>$expenseType
@@ -30,6 +40,7 @@ class ExpenseController
 		$modelId = $request->get('model_id');
 		$modelName = $request->get('model_name');
 		$model = ('\App\Models\\'.$modelName)::find($modelId);
+		// dd($modelId,$modelName,$model);
 		// dd($modelId,$modelName , (array)$request->get('tableIds'),$model);
 		foreach((array)$request->get('tableIds') as $tableId){
 			// delete all first 
@@ -55,7 +66,7 @@ class ExpenseController
 		return response()->json([
 			'status'=>true ,
 			'message'=>__('Done'),
-			'redirectTo'=>route('admin.create.expense',['company'=>$company_id,'expenseType'=>$expenseType])
+			'redirectTo'=>route('admin.create.expense',['company'=>$company_id,'expenseType'=>$expenseType,'financialPlan'=>$model->id])
 		]);
 		return redirect()->back()->with('success',__('Done'));
 	}

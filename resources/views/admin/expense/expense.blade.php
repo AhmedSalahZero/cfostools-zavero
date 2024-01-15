@@ -114,10 +114,10 @@
 <div class="row">
     <div class="col-md-12">
 
-        <form id="form-id" class="kt-form kt-form--label-right" method="POST" enctype="multipart/form-data" action="{{ route('admin.store.expense',['company'=>$company->id,'expenseType'=>$expenseType ]) }}">
+        <form id="form-id" class="kt-form kt-form--label-right" method="POST" enctype="multipart/form-data" action="{{ route('admin.store.expense',['company'=>$company->id,'expenseType'=>$expenseType,'financialPlan'=>$model->id ]) }}">
             @csrf
             <input type="hidden" name="model_id" value="{{ $model->id ?? 0  }}">
-            <input type="hidden" name="model_name" value="IncomeStatement">
+            <input type="hidden" name="model_name" value="FinancialPlan">
             <input type="hidden" name="expense_type" value="{{ $expenseType }}">
             <input type="hidden" name="company_id" value="{{ getCurrentCompanyId()  }}">
             <input type="hidden" name="creator_id" value="{{ \Auth::id()  }}">
@@ -1218,7 +1218,7 @@
             <x-tables.repeater-table-th class="col-md-1" :title="__('Start <br> Date')" :helperTitle="__('Defualt date is Income Statement start date, if else please select a date')"></x-tables.repeater-table-th>
             <x-tables.repeater-table-th class="col-md-1" :title="__('Amount')" :helperTitle="__('Please insert amount excluding VAT')"></x-tables.repeater-table-th>
             <x-tables.repeater-table-th class="col-md-2" :title="__('Payment <br> Terms')" :helperTitle="__('You can either choose one of the system default terms (cash, quarterly, semi-annually, or annually), if else please choose Customize to insert your payment terms')"></x-tables.repeater-table-th>
-            <x-tables.repeater-table-th class="col-md-2" :title="__('Payment <br> After')" :helperTitle="__('You can either choose one of the system default terms (cash, quarterly, semi-annually, or annually), if else please choose Customize to insert your payment terms')"></x-tables.repeater-table-th>
+            <x-tables.repeater-table-th class="col-md-2" :title="__('Repeating <br> Interval')" :helperTitle="__('You can either choose one of the system default terms (cash, quarterly, semi-annually, or annually), if else please choose Customize to insert your payment terms')"></x-tables.repeater-table-th>
             <x-tables.repeater-table-th class="col-md-1" :title="__('VAT <br> Rate')"></x-tables.repeater-table-th>
             <x-tables.repeater-table-th class="col-md-1" :title="__('Is Deductible')"></x-tables.repeater-table-th>
             <x-tables.repeater-table-th class="col-md-1" :title="__('Withhold <br> Tax Rate')" :helperTitle="__('Withhold Tax rate will be calculated based on Monthly Amount excluding VAT')"></x-tables.repeater-table-th>

@@ -11,7 +11,7 @@ jobs:
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: thetailorsweb.com2
+        server: thetailorsweb.com
         server-dir: public_html/cfostools-zavero/
         username: reveroplanner
         password: Aa@112233@aA

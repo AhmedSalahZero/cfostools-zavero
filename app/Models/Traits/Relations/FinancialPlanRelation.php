@@ -4,6 +4,7 @@ namespace App\Models\Traits\Relations;
 
 use App\Models\Acquisition;
 use App\Models\DepartmentExpense;
+use App\Models\Expenses;
 use App\Models\FFE;
 use App\Models\FFEItem;
 use App\Models\FFES;
@@ -87,6 +88,12 @@ trait FinancialPlanRelation
 		->where('model_name',$modelName)
 		;
 	}
-	
+	public function generateRelationDynamically(string $relationName,$expenseType){
+		
+		return $this->hasMany(Expenses::class , 'model_id','id')->where('model_name','FinancialPlan')->where('relation_name',$relationName)
+		->where('expense_type',$expenseType)
+		;
+	} 
+		
 	
 }

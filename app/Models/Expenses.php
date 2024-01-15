@@ -41,6 +41,7 @@ class Expenses extends Model
 	{
 		return $this->monthly_amount ?: 0 ;
 	}
+	
 	public function getPaymentTerm()
 	{
 		return $this->payment_terms ;
@@ -126,5 +127,7 @@ class Expenses extends Model
 	{
 		return $this->is_deductible;
 	}
+   
+	
 	
 }

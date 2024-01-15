@@ -58,6 +58,7 @@ trait FinancialPlanAccessor
 	{
 		return $this->study_end_date;
 	}
+	
 	public function getDurationInYears(): ?int
 	{
 		return $this->duration_in_years;

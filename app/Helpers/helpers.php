@@ -2142,7 +2142,6 @@ function sumAllOfDates(array $items)
 
 function applyInflationRate(float $base , float $percentage ,float $power)
 {
-	
 	return $base * pow( 1+($percentage / 100) , $power);
 }
 function getValueOfFirstKey(array $items , $makeArrayKeysAsValues=true):array 

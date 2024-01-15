@@ -54,6 +54,30 @@ class HArr
 
 		return $total;
 	}
+	
+	public static function multipleAtDates(array $items, array $dates)
+	{
+		$itemsCount = count($items);
+		if (!$itemsCount) {
+			return [];
+		}
+		if (!isset($items[0])) {
+			throw new Exception('Custom Exception .. First Parameter Must Be Indexes Array That Contains Arrays like [ [] , [] , [] ]');
+		}
+
+		$total = [];
+		foreach ($dates as $date) {
+			$currenTotal = 1;
+			for ($i = 0; $i< $itemsCount; $i++) {
+					$currenTotal *= $items[$i][$date]??0;
+			}
+			$total[$date] = $currenTotal;
+		}
+		return $total;
+	}
+	
+	
+	
 
 	public static function fillMissedKeysFromPreviousKeys(array $items, array $dates, $defaultValue = 0)
 	{
@@ -106,4 +130,5 @@ class HArr
 
 		return $result;
 	}
+
 }

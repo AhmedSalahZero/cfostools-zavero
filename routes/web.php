@@ -224,8 +224,11 @@ Route::middleware([])->group(function () {
 				
 				
 				
-				Route::get('financial-plans/{financial_plan_id}/expenses/create/{expenseType}', [ExpenseController::class, 'create'])->name('admin.create.expense');
-				Route::post('financial-plans/{financial_plan_id}/expenses/create/{expenseType}', [ExpenseController::class, 'store'])->name('admin.store.expense');
+				Route::get('financial-plans/{financialPlan}/expenses/create/{expenseType}', [ExpenseController::class, 'create'])->name('admin.create.expense');
+				Route::post('financial-plans/{financialPlan}/expenses/create/{expenseType}', [ExpenseController::class, 'store'])->name('admin.store.expense');
+				
+				// Route::get('expenses/create/{expenseType}', [ExpenseController::class, 'create'])->name('admin.create.expense');
+				// Route::post('expenses/create/{expenseType}', [ExpenseController::class, 'store'])->name('admin.store.expense');
 				
 				
 				Route::resource('expenses', 'ExpensesController');
