@@ -1,0 +1,39 @@
+.kt-list-timeline__items{
+    margin-bottom:2rem !important;
+    width:100%;
+}
+.kt-iconbox .kt-iconbox__body .kt-iconbox__desc{
+    flex:1 ;
+}
+.accordion .card .card-header .card-title{
+    font-size:1.5rem !important;
+    font-weight:500;
+    color: black !important;
+    
+}
+.subtitle-card-header{
+    font-size:1.25rem !important ;
+    color: #5578eb !important;
+}
+
+.with-padding
+{
+    padding-left:60px !important;
+}
+
+.repeater_item { border: dotted 1px #ccc; padding: 10px; margin: 10px; position: relative; }
+.repeater_item .trash_icon{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    cursor: pointer;
+}
+#add-row
+{
+    background: #084BA6;
+    border: #084BA6;
+    cursor: pointer;
+}
+.disabled-custom{
+    background-color:#ececec !important ;
+}

@@ -1,0 +1,22 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class OtherVariableManpowerExpenseFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'percentage'=>$this->faker->numberBetween(10,50),
+            'cost_per_unit'=> $costPerUnit = $this->faker->numberBetween(100000 , 90000),
+            'total_cost'=>$costPerUnit + $this->faker->numberBetween(5000  , 900)
+        ];
+    }
+}
