@@ -150,15 +150,15 @@ class AppServiceProvider extends ServiceProvider
 		// dd($dateWithMonthNumber);
 			
 		// dd($dateIndexWithMonthNumber);
-		$monthlyFixedRepeating = new FixedRepeatingWithInflation();
-		$expenses = Expenses::get();
-		$financialPlan =FinancialPlan::first();
-		$operationDates =$financialPlan ?  (array)json_decode($financialPlan->operation_dates) : [];
+		// $monthlyFixedRepeating = new FixedRepeatingWithInflation();
+		// $expenses = Expenses::get();
+		// $financialPlan =FinancialPlan::first();
+		// $operationDates =$financialPlan ?  (array)json_decode($financialPlan->operation_dates) : [];
 		// dd();
-		$datesAsStringAndIndex = $financialPlan->getDatesAsStringAndIndex();
+		// $datesAsStringAndIndex = $financialPlan->getDatesAsStringAndIndex();
 		
 		// dd($datesAsStringAndIndex);
-		$dates = $financialPlan->convertStringDatesFromArrayKeysToIndexes(array_flip($operationDates),$datesAsStringAndIndex);
+		// $dates = $financialPlan->convertStringDatesFromArrayKeysToIndexes(array_flip($operationDates),$datesAsStringAndIndex);
 		// dd($dates);
 		// dd($dateWithMonthNumber);
 		// dd($dates);
@@ -176,78 +176,78 @@ class AppServiceProvider extends ServiceProvider
 		
 		
 		
-		$purchasePrice = [
-			1=>
-			[
-				0=>100,
-				1=>110,
-				2=>120,
-				3=>130,
-				4=>140,
-				5=>150,
-				6=>160,
-				7=>170,
-				8=>180,
-				9=>190,
-				10=>200,
-				11=>210
-			]
-			];
+		// $purchasePrice = [
+		// 	1=>
+		// 	[
+		// 		0=>100,
+		// 		1=>110,
+		// 		2=>120,
+		// 		3=>130,
+		// 		4=>140,
+		// 		5=>150,
+		// 		6=>160,
+		// 		7=>170,
+		// 		8=>180,
+		// 		9=>190,
+		// 		10=>200,
+		// 		11=>210
+		// 	]
+		// 	];
 			
 			
-			$soldQuantity = [
-				1=>
-				[
-					0=>200,
-					1=>220,
-					2=>240,
-					3=>260,
-					4=>280,
-					5=>300,
-					6=>320,
-					7=>340,
-					8=>360,
-					9=>380,
-					10=>400,
-					11=>420
-				]
-				];
+		// 	$soldQuantity = [
+		// 		1=>
+		// 		[
+		// 			0=>200,
+		// 			1=>220,
+		// 			2=>240,
+		// 			3=>260,
+		// 			4=>280,
+		// 			5=>300,
+		// 			6=>320,
+		// 			7=>340,
+		// 			8=>360,
+		// 			9=>380,
+		// 			10=>400,
+		// 			11=>420
+		// 		]
+		// 		];
 			
-				$goodsInTransit = [
-					1=>
-					[
-						0=>0,
-						1=>10000,
-						2=>0,
-						3=>0,
-						4=>0,
-						5=>20000,
-						6=>0,
-						7=>0,
-						8=>0,
-						9=>0,
-						10=>0,
-						11=>0
-					]
-					];
+		// 		$goodsInTransit = [
+		// 			1=>
+		// 			[
+		// 				0=>0,
+		// 				1=>10000,
+		// 				2=>0,
+		// 				3=>0,
+		// 				4=>0,
+		// 				5=>20000,
+		// 				6=>0,
+		// 				7=>0,
+		// 				8=>0,
+		// 				9=>0,
+		// 				10=>0,
+		// 				11=>0
+		// 			]
+		// 			];
 					
-					$goodsInTransitQuantity = [
-						1=>
-						[
-							0=>0,
-							1=>1500,
-							2=>0,
-							3=>0,
-							4=>0,
-							5=>0,
-							6=>0,
-							7=>0,
-							8=>0,
-							9=>0,
-							10=>0,
-							11=>0
-						]
-						];
+		// 			$goodsInTransitQuantity = [
+		// 				1=>
+		// 				[
+		// 					0=>0,
+		// 					1=>1500,
+		// 					2=>0,
+		// 					3=>0,
+		// 					4=>0,
+		// 					5=>0,
+		// 					6=>0,
+		// 					7=>0,
+		// 					8=>0,
+		// 					9=>0,
+		// 					10=>0,
+		// 					11=>0
+		// 				]
+		// 				];
 						
 				
 				
