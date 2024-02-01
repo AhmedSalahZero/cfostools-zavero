@@ -860,6 +860,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string|null $study_name
+ * @property mixed|null $study_includes
  * @property array|null $revenue_streams
  * @property string|null $country_id
  * @property string|null $state_id
@@ -890,6 +891,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property mixed|null $production_capacity
  * @property string|null $manufacturing_products_allocations_type
+ * @property array|null $add_allocations
  * @property-read \App\Models\Acquisition|null $acquisition
  * @property-read \App\Models\Company|null $company
  * @property-read \App\Models\User|null $creator
@@ -918,6 +920,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan onlyCurrentCompany(?int $companyId = null)
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan query()
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereAddAllocations($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereAdditionalCurrency($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereCorporateTaxesRate($value)
@@ -947,6 +950,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStateId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStudyDates($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStudyEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStudyIncludes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStudyName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStudyStartDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereUpdatedAt($value)

@@ -2,18 +2,24 @@
 @section('css')
 <x-styles.commons></x-styles.commons>
 <style>
-.sub-title--header{
-	font-size: 1.5rem !important;
-    margin-left: 20px !important;
-    color: black !important;
-}
-hr.subtitle-hr{
-	border:1px dashed #CCE2FD !important;
-	
-}
-input , select ,.filter-option,hr.title-hr{
-	border:1px solid #CCE2FD !important;
-}
+    .sub-title--header {
+        font-size: 1.5rem !important;
+        margin-left: 20px !important;
+        color: black !important;
+    }
+
+    hr.subtitle-hr {
+        border: 1px dashed #CCE2FD !important;
+
+    }
+
+    input,
+    select,
+    .filter-option,
+    hr.title-hr {
+        border: 1px solid #CCE2FD !important;
+    }
+
     .ui-datepicker-calendar {
         display: none;
     }
@@ -216,8 +222,8 @@ input , select ,.filter-option,hr.title-hr{
                             </div>
                         </div>
                     </div>
-					
-					
+
+
                     <div class="col-md-4 mb-4">
                         <label class="form-label font-weight-bold">{{ __('Development / Construction Duration (Months)') }} @include('star') </label>
                         <div class="kt-input-icon">
@@ -226,8 +232,8 @@ input , select ,.filter-option,hr.title-hr{
                             </div>
                         </div>
                     </div>
-					
-					
+
+
                     <div class="col-md-4 mb-4">
 
                         <x-form.label :class="'label'" :id="'test-id'">{{ __('Development / Construction End Date') }} </x-form.label>
@@ -242,7 +248,7 @@ input , select ,.filter-option,hr.title-hr{
                             </div>
                         </div>
                     </div>
-					
+
 
 
 
@@ -310,16 +316,16 @@ input , select ,.filter-option,hr.title-hr{
                     </div>
 
 
-                  
+
 
                     <div class="col-md-4 mb-4">
 
-                        <x-form.label :class="'label'" :id="'test-id'">{{ __('Operation Start Date') }} 
-						    @include('star')
-						</x-form.label>
+                        <x-form.label :class="'label'" :id="'test-id'">{{ __('Operation Start Date') }}
+                            @include('star')
+                        </x-form.label>
                         <div class="kt-input-icon">
                             <div class="input-group date">
-                                <input id="operation-start-date" type="text" name="operation_start_date" class="only-month-year-picker date-input form-control"  value="{{ isset($model) ? $model->getOperationStartDate() : getCurrentDateForFormDate('date') }}" max="{{ date('m-d-Y') }}" id="kt_datepicker_3" />
+                                <input id="operation-start-date" type="text" name="operation_start_date" class="only-month-year-picker date-input form-control" value="{{ isset($model) ? $model->getOperationStartDate() : getCurrentDateForFormDate('date') }}" max="{{ date('m-d-Y') }}" id="kt_datepicker_3" />
                                 <div class="input-group-append">
                                     <span class="input-group-text">
                                         <i class="la la-calendar"></i>
@@ -332,6 +338,31 @@ input , select ,.filter-option,hr.title-hr{
                     <div class="col-md-4 mb-4">
                         <x-form.select :is-select2="false" :is-required="true" :options="getFinancialMonthsForSelect()" :add-new="false" :label="__('Financial Year Start Month')" class="" data-filter-type="{{ $type }}" :all="false" name="financial_year_start_month" id="{{$type.'_'.'financial_year_start_month' }}" :selected-value="isset($model) ? $model->financialYearStartMonth() : 0"></x-form.select>
                     </div>
+
+
+                    <div class="col-md-4 mb-4">
+                        <x-form.select :is-select2="false" :is-required="true" :options="[
+							[
+								'title'=>__('Local And Export Sales'),
+								'value'=>'local-and-export-sales',
+							],
+							[
+								'title'=>__('Only Local Sales'),
+								'value'=>'only-local-sales'
+							]
+						]" :add-new="false" :label="__('Does This Study Includes')" class="" data-filter-type="{{ $type }}" :all="false" name="study_includes" id="{{$type.'_'.'study_includes' }}" :selected-value="isset($model) ? $model->getStudyIncludes() : 'only-local-sales'"></x-form.select>
+                    </div>
+					
+					<div class="col-md-4 mb-4 mb-4 ">
+                        <x-form.select :is-required="true" :options="[
+																		'sales-channel'=>['title'=>__('Sales Channel'),'value'=>'sales-channel'],
+																		'zone'=>['title'=>__('Zone'),'value'=>'zone'],
+																		'bussiness-sector'=>['title'=>__('Business Sector'),'value'=>'business-sector'],
+																		'branch'=>['title'=>__('Branch'),'value'=>'branch'],
+																	  
+																	  ]" :add-new="false" :multiple="true" :label="__('Do You Want Sales Allocations')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="add_allocations[]" id="{{$type.'_'.'add_allocations' }}" :selected-value="isset($model) ? $model->getAddAllocations() : 0"></x-form.select>
+                    </div>
+					
 
                     <br>
                     <hr>
@@ -360,15 +391,15 @@ input , select ,.filter-option,hr.title-hr{
             <div class="row">
                 <hr class="title-hr" style="flex:1;background-color:lightgray">
             </div>
-			
-				<div class="row">
-					<div class="col-md-12">
-						  <div class="d-flex align-items-center ">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="d-flex align-items-center ">
                         <h3 class="font-weight-bold form-label kt-subheader__title sub-title--header small-caps mr-5" style=""> {{ __('Select From Existing Data') }} </h3>
                     </div>
-					</div>
-				</div>
-				
+                </div>
+            </div>
+
             <div class="row manufacturing-repeater">
 
                 <div class="form-group row" style="flex:1;">
@@ -412,179 +443,179 @@ input , select ,.filter-option,hr.title-hr{
 
                                 {{-- <div class="col-md-3 mb-4 mt-4">
                                     <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Finished Goods Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="finished_goods_inventory_coverage_days" id="{{$type.'_'.'finished_goods_inventory_coverage_days' }}" :selected-value="isset($model) ? $model->getFinishedGoodsInventoryCoverageDays() : 0"></x-form.select>
-                                </div> --}}
+                            </div> --}}
 
-                                {{-- <div class="col-md-3 mb-4 mt-4">
+                            {{-- <div class="col-md-3 mb-4 mt-4">
 
                                     <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Raw Material Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="raw_materials_inventory_coverage_days" id="{{$type.'_'.'raw_materials_inventory_coverage_days' }}" :selected-value="isset($model) ? $model->getRawMaterialsInventoryCoverageDays() : 0"></x-form.select>
-                                </div> --}}
+                        </div> --}}
 
 
-                            </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr class="subtitle-hr">
+        </div>
+        <div class="col-md-12">
+            <div class="d-flex align-items-center ">
+                <h3 class="font-weight-bold form-label kt-subheader__title small-caps sub-title--header mr-5" style=""> {{ __('Add New Data') }} </h3>
+            </div>
+        </div>
+    </div>
+    <div class="row manufacturing-repeater">
+
+        <div class="form-group row" style="flex:1;">
+            <div class="col-md-12 mt-3">
+
+                <div id="m_repeater_5" class="products-repeater">
+                    <div class="form-group  m-form__group row">
+                        <div data-repeater-list="new_manufacturingRevenueStreams" class="col-lg-12">
+                            @include('admin.financial_plans.form.manufacturingRevenueStreams-new-data' , [
+                            ])
                         </div>
                     </div>
+                    <div class="m-form__group form-group row">
 
-                </div>
-				
-				
-				
-
-
-            </div>
-			
-				<div class="row">
-					<div class="col-md-12">
-						<hr class="subtitle-hr">
-					</div>
-					<div class="col-md-12">
-						  <div class="d-flex align-items-center ">
-                        <h3 class="font-weight-bold form-label kt-subheader__title small-caps sub-title--header mr-5" style=""> {{ __('Add New Data') }} </h3>
-                    </div>
-					</div>
-				</div>
-			  <div class="row manufacturing-repeater">
-
-                <div class="form-group row" style="flex:1;">
-                    <div class="col-md-12 mt-3">
-						
-                        <div id="m_repeater_5" class="products-repeater">
-                            <div class="form-group  m-form__group row">
-                                <div data-repeater-list="new_manufacturingRevenueStreams" class="col-lg-12">
-                                    @include('admin.financial_plans.form.manufacturingRevenueStreams-new-data' , [
-                                    ])
-                                </div>
+                        <div class="col-lg-12">
+                            <div data-repeater-create="" class="btn btn btn-sm btn-success m-btn m-btn--icon m-btn--pill m-btn--wide {{__('right')}}" id="add-row">
+                                <span>
+                                    <i class="fa fa-plus"> </i>
+                                    <span>
+                                        {{ __('Add') }}
+                                    </span>
+                                </span>
                             </div>
-                            <div class="m-form__group form-group row">
-
-                                <div class="col-lg-12">
-                                    <div data-repeater-create="" class="btn btn btn-sm btn-success m-btn m-btn--icon m-btn--pill m-btn--wide {{__('right')}}" id="add-row">
-                                        <span>
-                                            <i class="fa fa-plus"> </i>
-                                            <span>
-                                                {{ __('Add') }}
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>
+                        </div>
 
 
-                                {{-- <div class="col-md-3 mb-4 mt-4">
+                        {{-- <div class="col-md-3 mb-4 mt-4">
                                     <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Finished Goods Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="finished_goods_inventory_coverage_days" id="{{$type.'_'.'finished_goods_inventory_coverage_days' }}" :selected-value="isset($model) ? $model->getFinishedGoodsInventoryCoverageDays() : 0"></x-form.select>
-                                </div> --}}
-{{-- 
+                    </div> --}}
+                    {{--
                                 <div class="col-md-3 mb-4 mt-4">
 
                                     <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Raw Material Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="raw_materials_inventory_coverage_days" id="{{$type.'_'.'raw_materials_inventory_coverage_days' }}" :selected-value="isset($model) ? $model->getRawMaterialsInventoryCoverageDays() : 0"></x-form.select>
-                                </div> --}}
+                </div> --}}
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+</div>
+
+</div>
+</div>
+
+
+
+{{-- End Manufacturing Revenue Stream Section  --}}
+
+
+
+
+
+{{-- Start Trading Revenue Stream Section  --}}
+
+<div class="kt-portlet">
+    <div class="kt-portlet__body">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="d-flex align-items-center ">
+                    <h3 class="font-weight-bold form-label kt-subheader__title small-caps mr-5" style=""> {{ __('Trading Revenue Stream') }} </h3>
+                    <input class="can-not-be-removed-checkbox" type="checkbox" style="width:20px;height:20px" checked readonly>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="btn active-style show-hide-repeater" data-query=".trading-repeater">{{ __('Show/Hide') }}</div>
+            </div>
+        </div>
+        <div class="row">
+            <hr class="title-hr" style="flex:1;background-color:lightgray">
+        </div>
+        <div class="row trading-repeater">
+
+            <div class="form-group row" style="flex:1;">
+                <div class="col-md-12 mt-3">
+
+
+                    <div id="m_repeater_3" class="products-repeater">
+                        <div class="form-group  m-form__group row">
+                            <div data-repeater-list="tradingRevenueStreams" class="col-lg-12">
+
+                                @if(isset($model) && $model->tradingRevenueStreams->count() )
+                                @foreach($model->tradingRevenueStreams as $tradingRevenueStreams)
+                                @include('admin.financial_plans.form.tradingRevenueStreams' , [
+                                'tradingRevenueStream'=>$tradingRevenueStreams
+                                ])
+                                @endforeach
+                                @else
+                                @include('admin.financial_plans.form.tradingRevenueStreams' , [
+                                ])
+
+                                @endif
+
+
+
+
 
 
                             </div>
                         </div>
-                    </div>
+                        <div class="m-form__group form-group row">
 
-                </div>
-				
-				
-				
-
-
-            </div>
-			
-        </div>
-    </div>
-	
-	
-
-    {{-- End Manufacturing Revenue Stream Section  --}}
-
-
-
-
-
-    {{-- Start Trading Revenue Stream Section  --}}
-
-    <div class="kt-portlet">
-        <div class="kt-portlet__body">
-            <div class="row">
-                <div class="col-md-10">
-                    <div class="d-flex align-items-center ">
-                        <h3 class="font-weight-bold form-label kt-subheader__title small-caps mr-5" style=""> {{ __('Trading Revenue Stream') }} </h3>
-                        <input class="can-not-be-removed-checkbox" type="checkbox" style="width:20px;height:20px" checked readonly>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="btn active-style show-hide-repeater" data-query=".trading-repeater">{{ __('Show/Hide') }}</div>
-                </div>
-            </div>
-            <div class="row">
-                <hr class="title-hr" style="flex:1;background-color:lightgray">
-            </div>
-            <div class="row trading-repeater">
-
-                <div class="form-group row" style="flex:1;">
-                    <div class="col-md-12 mt-3">
-
-
-                        <div id="m_repeater_3" class="products-repeater">
-                            <div class="form-group  m-form__group row">
-                                <div data-repeater-list="tradingRevenueStreams" class="col-lg-12">
-
-                                    @if(isset($model) && $model->tradingRevenueStreams->count() )
-                                    @foreach($model->tradingRevenueStreams as $tradingRevenueStreams)
-                                    @include('admin.financial_plans.form.tradingRevenueStreams' , [
-                                    'tradingRevenueStream'=>$tradingRevenueStreams
-                                    ])
-                                    @endforeach
-                                    @else
-                                    @include('admin.financial_plans.form.tradingRevenueStreams' , [
-                                    ])
-
-                                    @endif
-
-
-
-
-
-
-                                </div>
-                            </div>
-                            <div class="m-form__group form-group row">
-
-                                <div class="col-lg-12">
-                                    <div data-repeater-create="" class="btn btn btn-sm btn-success m-btn m-btn--icon m-btn--pill m-btn--wide {{__('right')}}" id="add-row">
+                            <div class="col-lg-12">
+                                <div data-repeater-create="" class="btn btn btn-sm btn-success m-btn m-btn--icon m-btn--pill m-btn--wide {{__('right')}}" id="add-row">
+                                    <span>
+                                        <i class="fa fa-plus"> </i>
                                         <span>
-                                            <i class="fa fa-plus"> </i>
-                                            <span>
-                                                {{ __('Add') }}
-                                            </span>
+                                            {{ __('Add') }}
                                         </span>
-                                    </div>
+                                    </span>
                                 </div>
-
-
-                                <div class="col-md-3 mb-4 mt-4">
-                                    <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Finished Goods Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="finished_goods_inventory_coverage_days_for_trading" id="{{$type.'_'.'finished_goods_inventory_coverage_days_for_trading' }}" :selected-value="isset($model) ? $model->getFinishedGoodsInventoryCoverageDaysForTrading() : 0"></x-form.select>
-                                </div>
-
-
-
-
                             </div>
+
+
+                            <div class="col-md-3 mb-4 mt-4">
+                                <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Finished Goods Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="finished_goods_inventory_coverage_days_for_trading" id="{{$type.'_'.'finished_goods_inventory_coverage_days_for_trading' }}" :selected-value="isset($model) ? $model->getFinishedGoodsInventoryCoverageDaysForTrading() : 0"></x-form.select>
+                            </div>
+
+
+
+
                         </div>
                     </div>
-
                 </div>
 
-
             </div>
+
+
         </div>
     </div>
+</div>
 
 
-    {{-- End Trading Revenue Stream Section  --}}
+{{-- End Trading Revenue Stream Section  --}}
 
 
-    {{-- <div class="kt-portlet">
+{{-- <div class="kt-portlet">
           
                 
                 <div class="kt-portlet__body">
@@ -597,18 +628,18 @@ input , select ,.filter-option,hr.title-hr{
 
 
 
-    <div class="kt-portlet">
-        <div class="kt-portlet__body">
-            <x-save-or-back :btn-text="__('Create')" />
-        </div>
+<div class="kt-portlet">
+    <div class="kt-portlet__body">
+        <x-save-or-back :btn-text="__('Create')" />
     </div>
+</div>
 
 
 
 
-    <!--end::Form-->
+<!--end::Form-->
 
-    <!--end::Portlet-->
+<!--end::Portlet-->
 </div>
 
 
@@ -657,8 +688,8 @@ input , select ,.filter-option,hr.title-hr{
                     $('.save-form').prop('disabled', false)
                     Swal.fire({
                         icon: 'success'
-                        , title: res.message,
-                    });
+                        , title: res.message
+                    , });
                     window.location.href = res.redirectTo;
                 }
                 , complete: function() {
@@ -856,14 +887,14 @@ input , select ,.filter-option,hr.title-hr{
         }
 
     })
-	
-	
-	    $(document).on('change', '.recalc-development-end-date', function(e) {
+
+
+    $(document).on('change', '.recalc-development-end-date', function(e) {
         e.preventDefault()
         const developmentStartDate = new Date($('.development-start-date').val());
         const developmentDuration = parseFloat($('.development-duration').val());
         if (developmentDuration || developmentDuration == '0') {
-            const numberOfMonths = (developmentDuration ) - 1
+            const numberOfMonths = (developmentDuration) - 1
             let developmentEndDate = developmentStartDate.addMonths(numberOfMonths)
             developmentEndDate = formatDate(developmentEndDate)
             $('#development-end-date').val(developmentEndDate).trigger('change')
@@ -871,7 +902,7 @@ input , select ,.filter-option,hr.title-hr{
         }
 
     })
-	
+
 
 
     $(document).on('change', '.recalate-development-start-date', function() {
@@ -958,16 +989,16 @@ input , select ,.filter-option,hr.title-hr{
         $(this).attr('disabled', true);
         const modalName = $(this).attr('data-modal-name');
         const modalType = $(this).attr('data-modal-type');
-	
-		
+
+
         const modal = $(this).closest('.modal');
         const value = modal.find('input.name-class-js').val();
         const previousSelectorSelector = $(this).attr('data-previous-select-selector');
         const previousSelectorValue = previousSelectorSelector ? $(previousSelectorSelector).val() : null;
         const previousSelectorNameInDb = $(this).attr('data-previous-select-name-in-db');
-		
-		const additionalColumn = $(this).attr('data-additional-column')
-		const additionalColumnValue = $(this).attr('data-additional-column-value')
+
+        const additionalColumn = $(this).attr('data-additional-column')
+        const additionalColumnValue = $(this).attr('data-additional-column-value')
 
         $.ajax({
             url: "{{ route('admin.store.new.modal',['company'=>$company->id ?? 0  ]) }}"
@@ -977,9 +1008,9 @@ input , select ,.filter-option,hr.title-hr{
                 , "modalType": modalType
                 , "value": value
                 , "previousSelectorNameInDb": previousSelectorNameInDb
-                , "previousSelectorValue": previousSelectorValue,
-				'additionalColumn':additionalColumn,
-				"additionalColumnValue":additionalColumnValue
+                , "previousSelectorValue": previousSelectorValue
+                , 'additionalColumn': additionalColumn
+                , "additionalColumnValue": additionalColumnValue
             }
             , type: "POST"
             , success: function(response) {
@@ -987,7 +1018,7 @@ input , select ,.filter-option,hr.title-hr{
                 modal.find('input').val('');
                 $('.modal').modal('hide')
                 if (response.status) {
-					
+
                     const allSelect = $(that).closest('.kt-portlet').find('select[data-modal-name="' + modalName + '"][data-modal-type="' + modalType + '"]');
                     const allSelectLength = allSelect.length;
                     allSelect.each(function(index, select) {

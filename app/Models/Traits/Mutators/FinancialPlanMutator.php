@@ -10,7 +10,6 @@ trait FinancialPlanMutator
 {
 	protected function getMainFields(): array
 	{
-		
 		return [
 			'creator_id', 'company_id', 'study_name', 'study_status',
 			'revenue_streams', 'country_id', 'country_id', 'state_id',
@@ -18,7 +17,7 @@ trait FinancialPlanMutator
 			'region', 'development_start_month',
 			'finished_goods_inventory_coverage_days','raw_materials_inventory_coverage_days','finished_goods_inventory_coverage_days_for_trading',
 			'development_start_date', 'development_duration', 'main_functional_currency', 'additional_currency', 'exchange_rate', 'corporate_taxes_rate', 'investment_return_rate', 'perpetual_growth_rate', 'financial_year_start_month',
-			'operation_start_date','development_end_date',
+			'operation_start_date','development_end_date','study_includes','add_allocations'
 			
 		];
 	}

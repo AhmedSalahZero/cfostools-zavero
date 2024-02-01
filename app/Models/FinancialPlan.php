@@ -23,7 +23,8 @@ class  FinancialPlan extends Model implements IBaseModel,  IExportable
 	
 	protected $casts = [
 		'study_dates'=>'array',
-		'revenue_streams'=>'array'
+		'revenue_streams'=>'array',
+		'add_allocations'=>'array'
 	];
 
 

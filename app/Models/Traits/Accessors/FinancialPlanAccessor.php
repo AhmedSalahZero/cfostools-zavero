@@ -721,5 +721,13 @@ trait FinancialPlanAccessor
 	{
 		return in_array('manufacturing',$this->getRevenueStreamTypes());
 	}
+	public function getStudyIncludes()
+	{
+		return $this->study_includes;
+	}
+	public function getAddAllocations()
+	{
+		return (array)$this->add_allocations ;
+	}
 	
 }
