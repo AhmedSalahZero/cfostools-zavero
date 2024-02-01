@@ -84,9 +84,7 @@
 
 <div class="row">
     <div class="col-md-12">
-
         <form id="form-id" class="kt-form kt-form--label-right" method="POST" enctype="multipart/form-data" action="{{  isset($disabled) && $disabled ? '#' :  $storeRoute  }}">
-
             @csrf
             <input type="hidden" name="company_id" value="{{ getCurrentCompanyId()  }}">
             <input type="hidden" name="creator_id" value="{{ \Auth::id()  }}">
@@ -649,11 +647,11 @@
                                                     {{-- <input type="hidden" class="" value="{{ $currentVal }}"> --}}
                                                     <input 
 														data-has-row-total="1"
-										data-max-row-total="100"
-										data-has-column-total="0"
-										data-max-column-total="0"
-										data-is-percentage="1"
-										data-no-digits="1"
+														data-max-row-total="100"
+														data-has-column-total="0"
+														data-max-column-total="0"
+														data-is-percentage="1"
+														data-no-digits="1"
 										
 													type="hidden" value="1/12" name="guest_flat_general_seasonality[{{ $monthNameFormattedArray['value'] }}]">
                                                     <input readonly type="text" style="max-width: 60px;min-width: 60px;text-align: center" data-year="{{ $monthNameFormattedArray['value'] }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" value="{{ number_format($currentVal*100,1) }}" data-month-name="{{ $monthNameFormattedArray['value'] }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';"  class="form-control has-total-cell target_repeating_amounts only-percentage-allowed size" data-closest-parent-query="tr">

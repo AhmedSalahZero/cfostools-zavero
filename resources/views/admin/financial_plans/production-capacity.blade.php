@@ -1,7 +1,148 @@
 @extends('layouts.dashboard')
 @section('css')
 <x-styles.commons></x-styles.commons>
+<style>
+    .sub-item-row td span {
+        font-weight: 500;
+    }
 
+    tr td:first-of-type {
+        max-width: 225px;
+    }
+
+    b {
+        display: inline-block;
+    }
+
+    .margin-left-auto-right-init {
+        margin-left: initial !important;
+        margin-right: auto !important;
+    }
+
+    input,
+    select,
+    .filter-option,
+    hr.title-hr,
+    .table-border-color td {
+        border: 1px solid #CCE2FD !important;
+    }
+
+    .production-q th:first-of-type,
+    .production-q td:first-of-type {
+        max-width: 1% !important;
+        width: 1% !important;
+        min-width: 1% !important;
+    }
+
+    .production-q th:first-of-type div,
+    .production-q td:first-of-type div,
+        {
+        max-width: 30px !important;
+        width: 30px !important;
+        min-width: 30px !important;
+    }
+
+    .max-w-checkbox {
+
+        min-width: 25px !important;
+        width: 25px !important;
+    }
+
+    .customize-elements .bootstrap-select {
+        min-width: 100px !important;
+        text-align: center !important;
+    }
+
+    .customize-elements input.only-percentage-allowed {
+        min-width: 100px !important;
+        max-width: 100px !important;
+        text-align: center !important;
+    }
+
+    [data-repeater-create] span {
+        white-space: nowrap !important;
+    }
+
+    .type-btn {
+        max-width: 150px;
+        height: 70px;
+        margin-right: 10px;
+        margin-bottom: 5px !important;
+    }
+
+    .type-btn:hover {}
+
+    .bootstrap-select {
+        min-width: 200px;
+    }
+
+    input {
+        min-width: 200px;
+    }
+
+    input.only-month-year-picker {
+        min-width: 100px;
+    }
+
+    input.only-greater-than-or-equal-zero-allowed {
+        min-width: 120px;
+    }
+
+    input.only-percentage-allowed {
+        min-width: 80px;
+    }
+
+    i {
+        text-align: left
+    }
+
+  
+
+    .repeat-to-r {
+        flex-basis: 100%;
+        cursor: pointer
+    }
+
+    .icon-for-selector {
+        background-color: white;
+        color: #0742A8;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-left: 3px;
+        transition: all 0.5s;
+    }
+
+    .icon-for-selector:hover {
+        transform: scale(1.2);
+
+    }
+
+    .filter-option {
+        text-align: center !important;
+    }
+
+
+    td input,
+    td select,
+    .filter-option {
+        border: 1px solid #CCE2FD !important;
+        margin-left: auto;
+        margin-right: auto;
+        color: black;
+        font-weight: 400;
+    }
+
+    th {
+        border-bottom: 1px solid #CCE2FD !important;
+    }
+
+    tr:last-of-type {}
+
+    .table tbody+tbody {
+        border-top: 1px solid #CCE2FD;
+    }
+
+</style>
 <style>
     .form-label {
         white-space: nowrap !important;
@@ -44,7 +185,7 @@
         background-color: #074FA4 !important
     }
 
-    .table-striped th,
+    .table-bg th,
     .table-striped2 th {
         background-color: #074FA4 !important
     }
@@ -55,6 +196,12 @@
 
     .total-tr .three-dots-parent {
         margin-top: 0 !important;
+    }
+
+    html body .sub-item-row td {
+        background-color: #E2EFFE !important;
+        color: black !important;
+        border: 1px solid white !important;
     }
 
 </style>
@@ -78,8 +225,8 @@
             {{-- <input id="daysDifference" type="hidden" value="{{ $daysDifference }}"> --}}
 
 
-			@foreach($products as $product)
-			<input type="hidden" name="product_ids[]" value="{{ $product->id }}">
+            @foreach($products as $product)
+            <input type="hidden" name="product_ids[]" value="{{ $product->id }}">
             {{-- start of kt-protlet Exhange Rate Forecast % --}}
             <div class="kt-portlet">
                 <div class="kt-portlet__body">
@@ -87,7 +234,7 @@
                         <div class="col-md-10">
                             <div class="d-flex align-items-center ">
                                 <h3 class="font-weight-bold form-label kt-subheader__title small-caps mr-5" style="">
-                                    {{ $product->getName() . ' / ' . __('Production Capacity')  }}
+                                    {{ $product->getName() . ' ' . __('Production Capacity')  }}
                                 </h3>
 
 
@@ -98,20 +245,19 @@
                         </div>
                     </div>
                     <div class="row">
-                        <hr style="flex:1;background-color:lightgray">
+                        <hr class="title-hr" style="flex:1;background-color:lightgray">
                     </div>
                     <div class="row exhange-rate-projection{{ $product->id }}">
 
 
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover table-checkable kt_table_2 ">
+                            <table class="table table-border-color removeGlobalStyle table-bg  table-bordered table-hover table-checkable kt_table_2 ">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">{{ __('Item') }}</th>
+                                        <th class="text-center text-white">{{ __('Item') }}</th>
                                         @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
-                                        <th class="text-center"> {{ __('Yr-') }}{{$yearIndexWithYear[$year]}} </th>
+                                        <th class="text-center  text-white"> {{ __('Yr-') }}{{$yearIndexWithYear[$year]}} </th>
                                         @endforeach
-                                        {{-- <th class="text-center">{{__('Total')}}</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -122,13 +268,10 @@
                                     <tr>
                                         <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
                                             <b>
-                                                {{ __('Operating Months Per Year') }}
+                                                {{ __('Max Operating Days Per Year') }}
                                             </b>
                                         </td>
-                                        @php
-                                        //$order = 1 ;
 
-                                        @endphp
 
                                         @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
 
@@ -140,9 +283,9 @@
 
                                             <div class="form-group three-dots-parent">
                                                 <div class="input-group input-group-sm align-items-center justify-content-center div-for-percentage">
-                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ sumNumberOfOnes($yearsWithItsMonths,$year,$datesIndexWithYearIndex) }}" readonly onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts only-percentage-allowed size" data-date="#" data-section="target" aria-describedby="basic-addon2">
+                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ number_format($daysCountPerYear['totalOfEachYear'][$year]??0 , 0) }}" readonly onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts only-percentage-allowed size" data-date="#" data-section="target" aria-describedby="basic-addon2">
                                                     <span class="ml-2">
-                                                        <b style="visibility:hidden">%</b>
+                                                        {{-- <b style="visibility:hidden">%</b> --}}
                                                     </span>
                                                 </div>
                                             </div>
@@ -155,68 +298,74 @@
 
 
 
+                                    @php
+                                    $rowIndex = 0 ;
+                                    @endphp
 
-                                    <tr>
+                                    {{-- <tr>
                                         <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
                                             <b>
                                                 {{ __('Production Lines Count (minimum 1)'  ) }}
-                                            </b>
-                                        </td>
+                                    </b>
+                                    </td>
+                                    @php
+                                    $columIndex = 0 ;
+                                    @endphp
+
+                                    @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
+
+                                    <td>
                                         @php
-                                        $order = 2 + $product->id  ;
-
+                                        $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'production_lines_count') ?? 0 ;
                                         @endphp
-
-                                        @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
-
-                                        <td>
-                                            @php
-                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'production_lines_count') ?? 0 ;
-                                            @endphp
-                                            <div class="form-group three-dots-parent">
-                                                <div class="input-group input-group-sm align-items-center justify-content-center ">
-                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal  }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts only-greater-than-zero-allowed size" data-year="{{ $year }}">
-                                                    <input type="hidden" value="{{ $currentVal ??0 }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" name="production_lines_count[{{ $product->id }}][{{ $year }}]" data-year="{{ $year }}">
-                                                    <span class="ml-2">
-                                                        {{-- <b>%</b> --}}
-                                                    </span>
-                                                </div>
-                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" data-year="{{ $year }}" data-section="target" title="{{__('Repeat Right')}}"></i>
+                                        <div class="form-group three-dots-parent">
+                                            <div class="input-group input-group-sm align-items-center justify-content-center ">
+                                                <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal  }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts  size">
+                                                <input type="hidden" value="{{ $currentVal ??0 }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" name="production_lines_count[{{ $product->id }}][{{ $year }}]">
+                                                <span class="ml-2">
+                                                </span>
                                             </div>
+                                            <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i>
+                                        </div>
 
-                                        </td>
-                                        @php
-                                        $order = $order +1 ;
-                                        @endphp
+                                    </td>
+                                    @php
+                                    $columIndex = $columIndex +1 ;
+                                    @endphp
 
-                                        @endforeach
+                                    @endforeach
 
 
-                                    </tr>
-									
-									
-									
-									
-									
-									
-									
-									
-									   <tr>
+                                    </tr> --}}
+
+                                    @php
+                                    $rowIndex ++ ;
+                                    @endphp
+
+
+
+
+
+
+
+
+
+
+
+                                    <tr data-type="production_lines_count">
                                         <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
                                             <b>
-											@php
-												$netWorkingType   =$model->getProductionLineForProductAtYear($product->id,0,'net_working_hours_type');
-											@endphp
-                                                <select name="type[{{ $product->id }}]"  class="form-control net-working-hours-js" style="max-width:450px;">
-												
-													<option @if($netWorkingType == 'annual')  selected @endif  value="annual">{{ __('Net Working Hours Per Days (Annuall Average)'  ) }}</option>
-													<option @if($netWorkingType == 'quarter')  selected  @endif  value="quarter">{{ __('Net Working Hours Per Days (Quarter Average)'  ) }}</option>
-												</select>
+                                                @php
+                                                $productLinesCountType =$model->getProductionLineForProductAtYear($product->id,0,'production_lines_count_type');
+                                                @endphp
+                                                <select name="product_lines_count_type[{{ $product->id }}]" class="form-control product-line-count-js  margin-left-auto-right-init net-working-hours-js js-recalculate-max-production-per-year" style="max-width:450px;">
+                                                    <option @if($productLinesCountType=='annual' ) selected @endif value="annual">{{ __('Production Lines Count Per Days (Annuall Count)'  ) }}</option>
+                                                    <option @if($productLinesCountType=='quarter' ) selected @endif value="quarter">{{ __('Production Lines Count Per Days (Quarter Count)'  ) }}</option>
+                                                </select>
                                             </b>
                                         </td>
                                         @php
-                                        $order = 1 + $product->id  ;
-
+                                        $columIndex = 0 ;
                                         @endphp
 
                                         @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
@@ -224,41 +373,42 @@
                                         <td class="td-for-annually">
 
                                             @php
-                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'net_working_hours_per_days') ?? 0 ;
-										
+                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'production_lines_count') ?? 1 ;
                                             @endphp
                                             <div class="form-group three-dots-parent">
                                                 <div class="input-group input-group-sm align-items-center justify-content-center ">
-                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal && !is_array($currentVal)? $currentVal:  0  }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts only-greater-than-zero-allowed size" data-year="{{ $year }}">
-                                                    <input type="hidden" value="{{ $currentVal && !is_array($currentVal)? $currentVal:  0 }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" name="net_working_hours_per_days[{{ $product->id }}][annual][{{ $year }}]" data-year="{{ $year }}">
+                                                    <input data-year="{{ $year }}" type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal && !is_array($currentVal)? $currentVal:  0  }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control production-line-count-js js-recalculate-max-production-per-year target_repeating_amounts  size">
+                                                    <input    type="hidden" value="{{ $currentVal && !is_array($currentVal)? $currentVal:  0 }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" name="production_lines_count[{{ $product->id }}][annual][{{ $year }}]">
                                                     <span class="ml-2">
                                                         {{-- <b>%</b> --}}
                                                     </span>
                                                 </div>
-                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" data-year="{{ $year }}" data-section="target" title="{{__('Repeat Right')}}"></i>
+                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i>
                                             </div>
 
                                         </td>
                                         @php
-                                        $order = $order +1 ;
+                                        $columIndex = $columIndex +1 ;
                                         @endphp
 
                                         @endforeach
 
 
-                                  	  </tr>
-									  
-									  @foreach(['q1','q2','q3','q4'] as $qIndex=>$quarter)
-									  {{-- {{ dd($currentVal,'w') }} --}}
-									   <tr class="quarter-row-js" style="">
+                                    </tr>
+
+                                    @php
+                                    $rowIndex ++ ;
+                                    @endphp
+
+                                    @foreach(['q1','q2','q3','q4'] as $qIndex=>$quarter)
+                                    <tr class="quarter-row-jsproduction_lines_count sub-item-row" style="">
                                         <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
-                                            <b style="padding-left:20px;">
-                                                {{ __('Quarter ['. $quarter .'] - Net Working Hours Per Day') }}
-                                            </b>
+                                            <span style="padding-left:20px;">
+                                                {{ __('Quarter ['. $quarter .'] - Production Lines Count Per Day') }}
+                                            </span>
                                         </td>
                                         @php
-                                        $order = 1 + $product->id +  ($qIndex+1) ;
-
+                                        $columIndex = 0 ;
                                         @endphp
 
                                         @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
@@ -266,149 +416,371 @@
                                         <td class="td-for-quarters">
 
                                             @php
-                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'net_working_hours_per_days') ?? 0 ;
+                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'production_lines_count') ?? 1 ;
                                             @endphp
                                             <div class="form-group three-dots-parent">
                                                 <div class="input-group input-group-sm align-items-center justify-content-center ">
-                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal && is_array($currentVal) ? $currentVal[$qIndex] : 0  }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts only-greater-than-zero-allowed size" data-year="{{ $year }}">
-                                                    <input type="hidden" value="{{ $currentVal && is_array($currentVal) ? $currentVal[$qIndex] : 0 }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" name="net_working_hours_per_days[{{ $product->id }}][quarter][{{ $year }}][]" data-year="{{ $year }}">
+                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal && is_array($currentVal) ? $currentVal[$qIndex] : 0  }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts  size">
+                                                    <input type="hidden" value="{{ $currentVal && is_array($currentVal) ? $currentVal[$qIndex] : 0 }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" name="production_lines_count[{{ $product->id }}][quarter][{{ $year }}][]">
                                                     <span class="ml-2">
                                                         {{-- <b>%</b> --}}
                                                     </span>
                                                 </div>
-                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" data-year="{{ $year }}" data-section="target" title="{{__('Repeat Right')}}"></i>
+                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $columIndex }}" data-index="{{ $rowIndex??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i>
                                             </div>
 
                                         </td>
                                         @php
-                                        $order = $order +1 ;
+                                        $columIndex = $columIndex +1 ;
                                         @endphp
 
                                         @endforeach
 
 
-                                  	  </tr>
-									  
-									  @endforeach 
-									  
-									  
-									  <tr>
+                                    </tr>
+
+                                    @php
+                                    $rowIndex ++ ;
+                                    @endphp
+
+                                    @endforeach
+
+                                    @php
+                                    $columIndex = 0 ;
+                                    @endphp
+
+
+
+
+
+
+
+
+
+
+
+
+                                    <tr data-type="net_working_hours_per_days">
+                                        <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
+                                            <b>
+                                                @php
+                                                $netWorkingType =$model->getProductionLineForProductAtYear($product->id,0,'net_working_hours_type');
+                                                @endphp
+                                                <select name="type[{{ $product->id }}]" class="form-control net-working-hour-type-js js-recalculate-max-production-per-year margin-left-auto-right-init net-working-hours-js" style="max-width:450px;">
+
+                                                    <option @if($netWorkingType=='annual' ) selected @endif value="annual">{{ __('Net Working Hours Per Days (Annuall Average)'  ) }}</option>
+                                                    <option @if($netWorkingType=='quarter' ) selected @endif value="quarter">{{ __('Net Working Hours Per Days (Quarter Average)'  ) }}</option>
+                                                </select>
+                                            </b>
+                                        </td>
+                                        @php
+                                        $columIndex = 0 ;
+                                        @endphp
+
+                                        @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
+
+                                        <td class="td-for-annually">
+
+                                            @php
+                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'net_working_hours_per_days') ?? 1 ;
+
+                                            @endphp
+                                            <div class="form-group three-dots-parent">
+                                                <div class="input-group input-group-sm align-items-center justify-content-center ">
+                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal && !is_array($currentVal)? $currentVal:  0  }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" data-year="{{ $year }}" class="form-control net-working-count-js js-recalculate-max-production-per-year target_repeating_amounts  size">
+                                                    <input type="hidden" value="{{ $currentVal && !is_array($currentVal)? $currentVal:  0 }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" name="net_working_hours_per_days[{{ $product->id }}][annual][{{ $year }}]">
+                                                    <span class="ml-2">
+                                                        {{-- <b>%</b> --}}
+                                                    </span>
+                                                </div>
+                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i>
+                                            </div>
+
+                                        </td>
+                                        @php
+                                        $columIndex = $columIndex +1 ;
+                                        @endphp
+
+                                        @endforeach
+
+
+                                    </tr>
+
+                                    @php
+                                    $rowIndex ++ ;
+                                    @endphp
+
+                                    @foreach(['q1','q2','q3','q4'] as $qIndex=>$quarter)
+                                    <tr class="quarter-row-jsnet_working_hours_per_days sub-item-row" style="">
+                                        <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
+                                            <span style="padding-left:20px;">
+                                                {{ __('Quarter ['. $quarter .'] - Net Working Hours Per Day') }}
+                                            </span>
+                                        </td>
+                                        @php
+                                        $columIndex = 0 ;
+                                        @endphp
+
+                                        @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
+
+                                        <td class="td-for-quarters">
+
+                                            @php
+                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'net_working_hours_per_days') ?? 1 ;
+                                            @endphp
+                                            <div class="form-group three-dots-parent">
+                                                <div class="input-group input-group-sm align-items-center justify-content-center ">
+                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal && is_array($currentVal) ? $currentVal[$qIndex] : 0  }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts  size">
+                                                    <input type="hidden" value="{{ $currentVal && is_array($currentVal) ? $currentVal[$qIndex] : 0 }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" name="net_working_hours_per_days[{{ $product->id }}][quarter][{{ $year }}][]">
+                                                    <span class="ml-2">
+                                                        {{-- <b>%</b> --}}
+                                                    </span>
+                                                </div>
+                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $columIndex }}" data-index="{{ $rowIndex??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i>
+                                            </div>
+
+                                        </td>
+                                        @php
+                                        $columIndex = $columIndex +1 ;
+                                        @endphp
+
+                                        @endforeach
+
+
+                                    </tr>
+
+                                    @php
+                                    $rowIndex ++ ;
+                                    @endphp
+
+                                    @endforeach
+
+                                    @php
+                                    $columIndex = 0 ;
+                                    @endphp
+                                    <tr>
                                         <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
                                             <b>
                                                 {{ __('Maximum Working Days Per Year') }}
                                             </b>
                                         </td>
                                         @php
-                                        $order = 3 + $product->id  ;
-
+                                        $columIndex = 0 ;
                                         @endphp
 
                                         @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
 
-                                        <td >
+                                        <td>
 
                                             @php
-                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'max_working_days_per_year') ?? 0 ;
+                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'max_working_days_per_year') ?? 1 ;
+											$defaultValue = $daysCountPerYear['totalOfEachYear'][$year] ?? 0 ;
+											$defaultValue = $defaultValue > 300 ? 300  : $defaultValue    ;
+											$currentVal = $currentVal ? $currentVal : $defaultValue ;
                                             @endphp
                                             <div class="form-group three-dots-parent">
                                                 <div class="input-group input-group-sm align-items-center justify-content-center ">
-                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal  }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts only-greater-than-zero-allowed size" data-year="{{ $year }}">
-                                                    <input type="hidden" value="{{ $currentVal ??0 }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" name="max_working_days_per_year[{{ $product->id }}][{{ $year }}]" data-year="{{ $year }}">
+                                                    <input data-max-year="{{ $daysCountPerYear['totalOfEachYear'][$year]??0 }}" type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal  }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';"  data-year="{{ $year }}" class="form-control max-working-days-js js-recalculate-max-production-per-year max-is-days-max target_repeating_amounts  size">
+                                                    <input type="hidden" value="{{ $currentVal ??0 }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" name="max_working_days_per_year[{{ $product->id }}][{{ $year }}]">
                                                     <span class="ml-2">
                                                         {{-- <b>%</b> --}}
                                                     </span>
                                                 </div>
-                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" data-year="{{ $year }}" data-section="target" title="{{__('Repeat Right')}}"></i>
+                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i>
                                             </div>
 
                                         </td>
                                         @php
-                                        $order = $order +1 ;
+                                        $columIndex = $columIndex +1 ;
                                         @endphp
 
                                         @endforeach
 
 
-                                  	  </tr> 
-									  <tr>
+                                    </tr>
+                                    @php
+                                    $rowIndex ++ ;
+                                    @endphp
+                                    <tr>
                                         <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
                                             <b>
-                                                {{ __('Production Capacity '. \App\Models\ProductionUnitOfMeasurement::getNameById($product->pivot ? $product->pivot->production_uom : 0)  .'/Hour') }}
+                                                {{ __('Production Capacity '. \App\Models\ProductionUnitOfMeasurement::getNameById($product->pivot ? $product->pivot->production_uom : 0)  .' ' . __('Per Hour')) }}
                                             </b>
                                         </td>
                                         @php
-                                        $order = 3 + $product->id  ;
-
+                                        $columIndex = 0 ;
                                         @endphp
-
                                         @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
 
-                                        <td >
+                                        <td>
 
                                             @php
-                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'production_capacity_per_hour') ?? 0 ;
+                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'production_capacity_per_hour') ?? 1 ;
                                             @endphp
                                             <div class="form-group three-dots-parent">
                                                 <div class="input-group input-group-sm align-items-center justify-content-center ">
-                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal  }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts only-greater-than-zero-allowed size" data-year="{{ $year }}">
-                                                    <input type="hidden" value="{{ $currentVal ??0 }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" name="production_capacity_per_hour[{{ $product->id }}][{{ $year }}]" data-year="{{ $year }}">
+                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal  }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" data-year="{{ $year }}" class="form-control production-capacity-js js-recalculate-max-production-per-year target_repeating_amounts  size">
+                                                    <input type="hidden" value="{{ $currentVal ??0 }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" name="production_capacity_per_hour[{{ $product->id }}][{{ $year }}]">
                                                     <span class="ml-2">
                                                         {{-- <b>%</b> --}}
                                                     </span>
                                                 </div>
-                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" data-year="{{ $year }}" data-section="target" title="{{__('Repeat Right')}}"></i>
+                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i>
                                             </div>
 
                                         </td>
                                         @php
-                                        $order = $order +1 ;
+                                        $columIndex = $columIndex +1 ;
                                         @endphp
 
                                         @endforeach
 
 
-                                  	  </tr> 
-									  <tr>
+                                    </tr>
+
+
+
+
+
+
+                                    @php
+                                    $rowIndex ++ ;
+                                    @endphp
+
+                                    <tr>
                                         <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
                                             <b>
-                                                {{ __('Maximum Production '.  \App\Models\ProductionUnitOfMeasurement::getNameById($product->pivot ? $product->pivot->production_uom : 0) .'/Hour'   ) }}
-												{{-- (Auto Calculated) --}}
+                                                {{ __('Maximum Production '.  \App\Models\ProductionUnitOfMeasurement::getNameById($product->pivot ? $product->pivot->production_uom : 0) .' '.__('Per Year')   ) }}
+                                                {{-- (Auto Calculated) --}}
                                             </b>
                                         </td>
                                         @php
-                                        $order = 3 + $product->id  ;
-
+                                        $columIndex = 0 ;
                                         @endphp
 
                                         @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
 
-                                        <td >
+                                        <td>
 
                                             @php
-                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'max_production_per_hour') ?? 0 ;
+                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'max_production_per_year') ?? 1 ;
                                             @endphp
                                             <div class="form-group three-dots-parent">
-                                                <div class="input-group input-group-sm align-items-center justify-content-center ">
-                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal  }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts only-greater-than-zero-allowed size" data-year="{{ $year }}">
-                                                    <input type="hidden" value="{{ $currentVal ??0 }}" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" name="max_production_per_hour[{{ $product->id }}][{{ $year }}]" data-year="{{ $year }}">
+                                                <div class="input-group input-group-sm align-items-center justify-content-center">
+                                                    <input  data-year="{{ $year }}" readonly type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal  }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';"  class="form-control recalculate-max-saleable- js-autocalculate-max-production target_repeating_amounts  size">
+                                                    <input type="hidden" value="{{ $currentVal ??0 }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" name="max_production_per_year[{{ $product->id }}][{{ $year }}]">
                                                     <span class="ml-2">
                                                         {{-- <b>%</b> --}}
                                                     </span>
                                                 </div>
-                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" data-year="{{ $year }}" data-section="target" title="{{__('Repeat Right')}}"></i>
+                                                {{-- <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i> --}}
                                             </div>
 
                                         </td>
                                         @php
-                                        $order = $order +1 ;
+                                        $columIndex = $columIndex +1 ;
                                         @endphp
 
                                         @endforeach
 
 
-                                  	  </tr>
-									  
-									
+                                    </tr>
+
+
+
+
+
+
+                                    @php
+                                    $rowIndex ++ ;
+                                    @endphp
+                                    <tr>
+                                        <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
+                                            <b>
+                                                {{ __('Product Waste Rate %') }}
+                                            </b>
+                                        </td>
+                                        @php
+                                        $columIndex = 0 ;
+                                        @endphp
+                                        @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
+
+                                        <td>
+
+                                            @php
+                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'product_waste_rate') ?? 1 ;
+                                            @endphp
+                                            <div class="form-group three-dots-parent">
+                                                <div class="input-group input-group-sm align-items-center justify-content-center ">
+                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal  }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts  size">
+                                                    <input type="hidden" value="{{ $currentVal ??0 }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" name="product_waste_rate[{{ $product->id }}][{{ $year }}]">
+                                                    <span class="ml-2">
+                                                        {{-- <b>%</b> --}}
+                                                    </span>
+                                                </div>
+                                                <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i>
+                                            </div>
+
+                                        </td>
+                                        @php
+                                        $columIndex = $columIndex +1 ;
+                                        @endphp
+
+                                        @endforeach
+
+
+                                    </tr>
+
+
+
+                                    @php
+                                    $rowIndex ++ ;
+                                    @endphp
+
+                                    <tr>
+                                        <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
+                                            <b>
+                                                {{ __('Maximum Saleable Production '.  \App\Models\ProductionUnitOfMeasurement::getNameById($product->pivot ? $product->pivot->production_uom : 0) .' '.__('Per Year')   ) }}
+                                                {{-- (Auto Calculated) --}}
+                                            </b>
+                                        </td>
+                                        @php
+                                        $columIndex = 0 ;
+                                        @endphp
+
+                                        @foreach($yearsWithItsMonths as $year=>$monthsForThisYearArray)
+
+                                        <td>
+
+                                            @php
+                                            $currentVal = $model->getProductionLineForProductAtYear($product->id,$year,'max_saleable_production_per_year') ?? 1 ;
+                                            @endphp
+                                            <div class="form-group three-dots-parent">
+                                                <div class="input-group input-group-sm align-items-center justify-content-center">
+                                                    <input readonly type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ $currentVal  }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts  size">
+                                                    <input type="hidden" value="{{ $currentVal ??0 }}" data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" name="max_saleable_production_per_year[{{ $product->id }}][{{ $year }}]">
+                                                    <span class="ml-2">
+                                                        {{-- <b>%</b> --}}
+                                                    </span>
+                                                </div>
+                                                {{-- <i class="fa fa-ellipsis-h pull-left target_last_value " data-order="{{ $columIndex??1 }}" data-index="{{ $rowIndex??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i> --}}
+                                            </div>
+
+                                        </td>
+                                        @php
+                                        $columIndex = $columIndex +1 ;
+                                        @endphp
+
+                                        @endforeach
+
+
+                                    </tr>
+
+
+                                    @php
+                                    $rowIndex ++ ;
+                                    @endphp
+
 
 
 
@@ -422,8 +794,117 @@
 
                 </div>
             </div>
-			@endforeach 
+
+            <div class="kt-portlet">
+                <div class="kt-portlet__body">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="d-flex align-items-center ">
+                                <h3 class="font-weight-bold form-label kt-subheader__title small-caps mr-5" style="">
+                                    {{ $product->getName() . ' ' . __('Production Formula Per') . ' [ ' . \App\Models\ProductionUnitOfMeasurement::getNameById($product->pivot ? $product->pivot->production_uom : 0) . ' ]'  }}
+                                </h3>
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="btn active-style show-hide-repeater" data-query=".production-capacity{{ $product->id }}">{{ __('Show/Hide') }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <hr class="title-hr" style="flex:1;background-color:lightgray">
+                    </div>
+
+                    <div class="row production-capacity{{ $product->id }}">
+                        <div class="col-12">
+                            {{-- start of fixed monthly repeating amount --}}
+                            @php
+                            $rowMaterialType = 'production_capacity';
+                            $tableId = $rowMaterialType.'['.$product->id.']';
+                            $repeaterId = 'production_capacity_row_materia_repeater'.$product->id;
+
+                            @endphp
+                            <input type="hidden" value="{{ $rowMaterialType }}" name="raw_material_type">
+                            <input type="hidden" name="tableIds[]" value="{{ $tableId }}">
+                            <x-tables.repeater-table :repeaterClass="'table-border-color removeGlobalStyle table-bg'" :actionThClass="'text-white'" :removeRepeater="false" :repeater-with-select2="true" :parentClass="'js-toggle-visiability   '" :tableName="$tableId" :repeaterId="$repeaterId" :relationName="'row_materials'" :isRepeater="$isRepeater=!(isset($removeRepeater) && $removeRepeater)">
+                                <x-slot name="ths">
+                                    <x-tables.repeater-table-th class="col-md-4 text-white" :title="__('Raw Material Name')"></x-tables.repeater-table-th>
+                                    <x-tables.repeater-table-th class="col-md-1 text-white" :title="__('Raw Material UOM')" :helperTitle="__('')"></x-tables.repeater-table-th>
+                                    <x-tables.repeater-table-th class="col-md-1 text-white" :title="__('Quantity')" :helperTitle="__('')"></x-tables.repeater-table-th>
+                                    <x-tables.repeater-table-th class="col-md-1 text-white" :title="__('Waste Rate %')" :helperTitle="__('')"></x-tables.repeater-table-th>
+                                    <x-tables.repeater-table-th class="col-md-1 text-white" :title="__('Total Quantity')" :helperTitle="__('')"></x-tables.repeater-table-th>
+                                </x-slot>
+                                <x-slot name="trs">
+                                    @php
+                                    $rows = isset($model) ? $model->generateRelationDynamicallyForRowMaterial($rowMaterialType)->get() : [-1] ;
+                                    @endphp
+                                    @foreach( count($rows) ? $rows : [-1] as $subModel)
+                                    @php
+                                    if( !($subModel instanceof \App\Models\RawMaterial) ){
+                                    unset($subModel);
+                                    }
+
+                                    @endphp
+                                    <tr @if($isRepeater) data-repeater-item @endif>
+                                        <td class="text-center">
+                                            <div class="">
+                                                <i data-repeater-delete="" class="btn-sm btn btn-danger m-btn m-btn--icon m-btn--pill trash_icon fas fa-times-circle">
+                                                </i>
+                                            </div>
+                                        </td>
+
+
+                                        <input type="hidden" name="id" value="{{ isset($subModel) ? $subModel->id : 0 }}">
+                                        <td>
+                                            <input value="{{ isset($subModel) ?  $subModel->getName() : old('name') }}" class="form-control" @if($isRepeater) name="name" @else name="{{ $tableId }}[0][name]" @endif type="text">
+                                        </td>
+										
+                                        <td>
+                                            <x-form.select :selectedValue="isset($subModel) ? $subModel->getProductUnitOfMeasurementId() : null " :options="$productionUnitOfMeasurements" :add-new="false" class="select2-select   repeater-select" data-filter-type="{{ $type }}" :all="false" name="{{ $isRepeater ? 'product_unit_of_measurement_id':'['. $tableId .'][0][product_unit_of_measurement_id]' }}" id="{{$type.'_'.'duration_type' }}"></x-form.select>
+                                        </td>
+										
+                                        <td>
+
+                                            <div class="d-flex align-items-center js-common-parent">
+                                                <input value="{{ isset($subModel) ? $subModel->getQuantity() : null }}" class="form-control js-show-all-categories-popup" @if($isRepeater) name="quantity" @else name="{{ $tableId }}[0][quantity]" @endif type="text">
+                                                @include('ul-to-trigger-popup')
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input value="{{ (isset($subModel) ? number_format($subModel->getWasteRate(),0) : 0) }}" @if($isRepeater) name="waste_rate" @else name="[{{ $tableId }}][0][waste_rate]" @endif class="form-control text-center only-greater-than-or-equal-zero-allowed" type="text">
+                                            <input type="hidden" value="{{ (isset($subModel) ? $subModel->getWasteRate() : 0) }}" @if($isRepeater) name="waste_rate" @else name="[{{ $tableId }}][0][waste_rate]" @endif>
+                                        </td>
+
+                                        <td>
+											{{-- auto calculated --}}
+                                            <input readonly value="{{ (isset($subModel) ? number_format($subModel->getTotalQuantity(),0) : 0) }}" @if($isRepeater) name="total_quantity" @else name="[{{ $tableId }}][0][total_quantity]" @endif class="form-control text-center only-greater-than-or-equal-zero-allowed" type="text">
+                                            <input type="hidden" value="{{ (isset($subModel) ? $subModel->getTotalQuantity() : 0) }}" @if($isRepeater) name="total_quantity" @else name="[{{ $tableId }}][0][total_quantity]" @endif>
+                                        </td>
+
+
+
+
+                                    </tr>
+                                    @endforeach
+
+                                </x-slot>
+
+
+
+
+                            </x-tables.repeater-table>
+                            {{-- end of fixed monthly repeating amount --}}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            @endforeach
             {{-- end of kt-protlet Exhange Rate Forecast % --}}
+
+
+
+
 
 
 
@@ -808,17 +1289,52 @@
 
 </script>
 <script>
-$(document).on('change','.net-working-hours-js',function(){
-	const val = $(this).val();
-	if(val == 'quarter'){
-		$('.td-for-annually input').val(1).trigger('change').prop('disabled',true);		
-		$('.quarter-row-js').show();
-	}else{
-		$('.td-for-annually input').val(1).prop('disabled',false);		
-		$('.quarter-row-js').hide();
-	}
-})
-$('.net-working-hours-js').trigger('change');
+    $(document).on('change', 'select.net-working-hours-js', function() {
+        const val = $(this).val();
+        const type = $(this).closest('tr').attr('data-type');
+        if (val == 'quarter') {
+            $(this).closest('tr').find('.td-for-annually input').prop('disabled', true);
+            $(this).closest('table').find('.quarter-row-js' + type).show();
+        } else {
+
+            $(this).closest('tr').find('.td-for-annually input').prop('disabled', false);
+            $(this).closest('table').find('.quarter-row-js' + type).hide();
+        }
+    })
+    $('select.net-working-hours-js').trigger('change');
+    $('.js-parent-to-table').show()
+    $(document).on('change', '.max-is-days-max', function() {
+        const maxYear = $(this).attr('data-max-year')
+        const value = number_unformat($(this).val())
+        if (value > maxYear) {
+            Swal.fire({
+                icon: "warning"
+                , text: '{{ __("Invalid Max Year Days") }}'
+            })
+            $(this).val(maxYear).trigger('change')
+
+        }
+
+    })
+	$(document).on('change','.js-recalculate-max-production-per-year',function(){
+		const parent  = $(this).closest('table') 
+		const productLineCountType = parent.find('select.product-line-count-js').val() // annual or quarter
+		const netWorkingHourType = parent.find('select.net-working-hour-type-js').val() // annual or quarter
+		const maxProductionPerTon = parent.find('.js-autocalculate-max-production')
+		if(productLineCountType == 'annual' && netWorkingHourType == 'annual'){
+			$(maxProductionPerTon).each(function(index,element){
+				var currentYear = $(element).attr('data-year')
+				var productionLineCount = number_unformat(parent.find('.production-line-count-js[data-year="'+currentYear+'"]').val())
+				var netWorkingCount = number_unformat(parent.find('.net-working-count-js[data-year="'+currentYear+'"]').val())
+				var maxWorkingDaysPerYear = number_unformat(parent.find('.max-working-days-js[data-year="'+currentYear+'"]').val())
+				var productCapacity = number_unformat(parent.find('.production-capacity-js[data-year="'+currentYear+'"]').val())
+				var calculation = productionLineCount*netWorkingCount*maxWorkingDaysPerYear*productCapacity ;
+				$(element).val(calculation).trigger('change')
+				
+			})
+			console.log()
+		}		
+	})
 </script>
 
 @endsection

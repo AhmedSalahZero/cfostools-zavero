@@ -1294,26 +1294,7 @@ $order = $order +1 ;
 
                 </td>
 
-                @if($qName =='quarter-four')
-
-                {{-- add total td --}}
-
-                {{-- <td style="vertical-align:middle">
-
-
-                                <div class="form-group three-dots-parent">
-                                    <div class="input-group input-group-sm align-items-center justify-content-center div-for-percentage">
-                                        <input readonly type="text" style="max-width: 60px;min-width: 60px;text-align: center" data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" value="0" data-month-name="{{ $qName }}" onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" data-total-must-be-100="1" class="form-control allows-readonly result-of-total-row only-percentage-allowed size" data-number-format-digits="2" data-is-percentage="1">
-                <span class="ml-2">
-                    <b>%</b>
-                </span>
-</div>
-<i class="fa fa-ellipsis-h pull-{{__('left')}}  " data-order="{{ $order??1 }}" data-index="{{ $index??0 }}" data-section="target" title="{{__('Repeat Right')}}"></i>
-</div>
-
-
-</td> --}}
-@endif
+        
 @php
 $order = $order +1 ;
 @endphp

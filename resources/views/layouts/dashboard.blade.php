@@ -777,10 +777,12 @@
         $(document).on("click", ".target_last_value,.pricing_last_value", function() {
             let parent = $(this).closest('table');
             //const year = $(this).data('year')
+			
             const index = $(this).attr('data-index');
             const repeatingDirection = hasAttribute($(this).attr('data-repeating-direction')) ? $(this).attr('data-repeating-direction') : 'row';
 
             const order = +$(this).attr('data-order')
+			console.log(index,repeatingDirection,order)
             var chosen_val = parent.find('.target_repeating_amounts[data-order="' + order + '"][data-index="' + index + '"]').val();
             chosen_val = chosen_val ? chosen_val : 0;
             targets = {};
@@ -801,11 +803,7 @@
                         var total = 0;
                         total = totalforEachColumn(parent, loopYear);
 
-                        //    if (!total) {
-                        //        parent.find('.target_repeating_amounts[data-order="' + loopOrder + '"][data-index="' + loopIndex + '"]').val(0)
-                        //        parent.find('.target_repeating_amounts[data-order="' + loopOrder + '"][data-index="' + loopIndex + '"]').val(0);
-                        //        this.style.width = (('0'.length + 1) * 10) + 'px';
-                        //    }
+               
                     }
 
 

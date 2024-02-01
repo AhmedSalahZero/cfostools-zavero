@@ -28,7 +28,7 @@ namespace App\Models{
  * @property string|null $collection_policy_interval
  * @property string|null $collection_policy_type
  * @property string|null $collection_policy_value
- * @property int|null $hospitality_sector_id
+ * @property int|null $financial_plan_id
  * @property int|null $company_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -50,6 +50,7 @@ namespace App\Models{
  * @property string|null $soft_balance_rate_two
  * @property string|null $soft_due_one
  * @property string|null $soft_balance_rate_one
+ * @property string|null $soft_construction_start_date
  * @property string|null $soft_down_payment
  * @property string|null $soft_construction_end_date
  * @property string|null $soft_execution_method
@@ -57,7 +58,7 @@ namespace App\Models{
  * @property string|null $soft_construction_cost
  * @property string|null $has_soft_construction_cost_section
  * @property string|null $soft_construction_duration
- * @property-read \App\Models\HospitalitySector|null $hospitalitySector
+ * @property-read \App\Models\FinancialPlan|null $financialPlan
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Loan[] $loans
  * @property-read int|null $loans_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SoftConstructionCost[] $softConstructionCosts
@@ -71,6 +72,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereCollectionPolicyValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereFinancialPlanId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereFirstLandDownPaymentPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereHardBalanceRateOne($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereHardBalanceRateTwo($value)
@@ -87,7 +89,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereHasHardConstructionCostSection($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereHasLandSection($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereHasSoftConstructionCostSection($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereHospitalitySectorId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereInstallmentInterval($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereLandAfterMonth($value)
@@ -104,6 +105,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereSoftConstructionCost($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereSoftConstructionDuration($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereSoftConstructionEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereSoftConstructionStartDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereSoftDownPayment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereSoftDueOne($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Acquisition whereSoftDueTwo($value)
@@ -251,13 +253,21 @@ namespace App\Models{
 /**
  * App\Models\Category
  *
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $products
- * @property-read int|null $products_count
- * @method static \Illuminate\Database\Eloquent\Builder|Category company()
+ * @property int $id
+ * @property string|null $name
+ * @property string|null $model_type
+ * @property int|null $company_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Category query()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereModelType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
  */
 	class Category extends \Eloquent {}
 }
@@ -366,6 +376,7 @@ namespace App\Models{
  * App\Models\Currency
  *
  * @property int $id
+ * @property int|null $company_id
  * @property string $name
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -374,6 +385,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Currency newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Currency newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Currency query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Currency whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Currency whereName($value)
@@ -458,8 +470,9 @@ namespace App\Models{
  *
  * @property int $id
  * @property string|null $model_name
- * @property int|null $hospitality_sector_id
+ * @property int|null $financial_plan_id
  * @property string|null $section_name
+ * @property string|null $department_name
  * @property string|null $name
  * @property array|null $payload
  * @property array|null $manpower_payload
@@ -492,7 +505,9 @@ namespace App\Models{
  * @property string|null $opex_payment_terms
  * @property string|null $payment_month
  * @property string|null $percentage_from_fixed_assets
- * @property-read \App\Models\HospitalitySector|null $hospitalitySector
+ * @property string|null $start_up_cost
+ * @property string|null $date
+ * @property-read \App\Models\HospitalitySector $hospitalitySector
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense query()
@@ -505,16 +520,18 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereCurrentNetSalary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereDeferredPaymentPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereDepartmentName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereDueDays($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereEscalationRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereExpensePerGuest($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereExpensePerGuestSold($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereExpensePerNightSold($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereFinancialPlanId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereGuestAnnualEscalationRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereGuestExpenseAtOperationDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereGuestExpenseEscalationRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereHospitalitySectorId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereInventoryCoverageDays($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereManpowerPayload($value)
@@ -531,6 +548,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereSalaryTaxes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereSectionName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereSocialInsurance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereStartUpCost($value)
  * @method static \Illuminate\Database\Eloquent\Builder|DepartmentExpense whereUpdatedAt($value)
  */
 	class DepartmentExpense extends \Eloquent {}
@@ -555,6 +573,105 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|DirectManpowerExpense whereUpdatedAt($value)
  */
 	class DirectManpowerExpense extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Expense
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property string|null $expense_type
+ * @property int|null $company_id
+ * @property int|null $created_by
+ * @property int $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereExpenseType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expense whereUpdatedBy($value)
+ */
+	class Expense extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Expenses
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property string|null $expense_type
+ * @property string|null $category_name
+ * @property string|null $start_date
+ * @property string|null $interval
+ * @property string|null $monthly_cost_of_unit
+ * @property string|null $revenue_stream_type
+ * @property string|null $monthly_amount
+ * @property string|null $month_percentage
+ * @property string|null $payment_terms
+ * @property string|null $vat_rate
+ * @property int $is_deductible
+ * @property string|null $withhold_tax_rate
+ * @property string|null $increase_rate
+ * @property string|null $increase_interval
+ * @property array|null $payload
+ * @property int $model_id
+ * @property string|null $model_name
+ * @property string|null $relation_name
+ * @property string|null $allocation_base_1
+ * @property string|null $allocation_base_2
+ * @property string|null $allocation_base_3
+ * @property string|null $conditional_to
+ * @property string|null $conditional_value_a
+ * @property string|null $conditional_value_b
+ * @property array|null $custom_collection_policy
+ * @property int $company_id
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Company $company
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereAllocationBase1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereAllocationBase2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereAllocationBase3($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereCategoryName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereConditionalTo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereConditionalValueA($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereConditionalValueB($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereCustomCollectionPolicy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereExpenseType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereIncreaseInterval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereIncreaseRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereInterval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereIsDeductible($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereModelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereModelName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereMonthPercentage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereMonthlyAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereMonthlyCostOfUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses wherePayload($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses wherePaymentTerms($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereRelationName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereRevenueStreamType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereVatRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Expenses whereWithholdTaxRate($value)
+ */
+	class Expenses extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -622,6 +739,7 @@ namespace App\Models{
  * @property int|null $company_id
  * @property string|null $currency_name
  * @property string|null $replacement_cost_rate
+ * @property string|null $replacement_interval
  * @property-read \App\Models\FFE|null $ffe
  * @method static \Illuminate\Database\Eloquent\Builder|FFEItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|FFEItem newQuery()
@@ -639,10 +757,201 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|FFEItem whereModelName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FFEItem whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FFEItem whereReplacementCostRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFEItem whereReplacementInterval($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FFEItem whereSectionName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|FFEItem whereUpdatedAt($value)
  */
 	class FFEItem extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\FFES
+ *
+ * @property int $id
+ * @property int|null $financial_plan_id
+ * @property int|null $company_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $duration
+ * @property string|null $start_date
+ * @property string|null $end_date
+ * @property string|null $execution_method
+ * @property string|null $down_payment
+ * @property string|null $balance_rate_one
+ * @property string|null $balance_rate_two
+ * @property string|null $due_one
+ * @property string|null $due_two
+ * @property string|null $ffe_equity_funding
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FFESItem[] $ffesItems
+ * @property-read int|null $ffes_items_count
+ * @property-read \App\Models\HospitalitySector $hospitalitySector
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Loan[] $loans
+ * @property-read int|null $loans_count
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES onlyCurrentCompany(?int $companyId = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES query()
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereBalanceRateOne($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereBalanceRateTwo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereDownPayment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereDueOne($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereDueTwo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereExecutionMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereFfeEquityFunding($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereFinancialPlanId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFES whereUpdatedAt($value)
+ */
+	class FFES extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\FFESItem
+ *
+ * @property int $id
+ * @property int|null $financial_plan_id
+ * @property int|null $ffe_id
+ * @property string|null $section_name
+ * @property string|null $model_name
+ * @property string|null $name
+ * @property string|null $depreciation_duration
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $item_cost
+ * @property string|null $contingency_rate
+ * @property int|null $company_id
+ * @property string|null $currency_name
+ * @property string|null $replacement_cost_rate
+ * @property string|null $replacement_interval
+ * @property-read \App\Models\FFES|null $ffe
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem onlyCurrentCompany(?int $companyId = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereContingencyRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereCurrencyName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereDepreciationDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereFfeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereFinancialPlanId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereItemCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereModelName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereReplacementCostRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereReplacementInterval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereSectionName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FFESItem whereUpdatedAt($value)
+ */
+	class FFESItem extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\FinancialPlan
+ *
+ * @property int $id
+ * @property string|null $study_name
+ * @property array|null $revenue_streams
+ * @property string|null $country_id
+ * @property string|null $state_id
+ * @property string|null $region
+ * @property string|null $study_start_date
+ * @property string|null $operation_start_date
+ * @property mixed|null $operation_dates
+ * @property string|null $duration_in_years
+ * @property string|null $study_end_date
+ * @property array|null $study_dates
+ * @property string|null $development_start_month
+ * @property string|null $development_start_date
+ * @property string|null $development_end_date
+ * @property string|null $development_duration
+ * @property string|null $main_functional_currency
+ * @property string|null $additional_currency
+ * @property string|null $exchange_rate
+ * @property string|null $corporate_taxes_rate
+ * @property string|null $investment_return_rate
+ * @property string|null $perpetual_growth_rate
+ * @property string|null $financial_year_start_month
+ * @property string|null $finished_goods_inventory_coverage_days
+ * @property string|null $raw_materials_inventory_coverage_days
+ * @property string|null $finished_goods_inventory_coverage_days_for_trading
+ * @property string|null $creator_id
+ * @property string|null $company_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property mixed|null $production_capacity
+ * @property string|null $manufacturing_products_allocations_type
+ * @property-read \App\Models\Acquisition|null $acquisition
+ * @property-read \App\Models\Company|null $company
+ * @property-read \App\Models\User|null $creator
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\DepartmentExpense[] $departmentExpenses
+ * @property-read int|null $department_expenses_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FFESItem[] $ffeItems
+ * @property-read int|null $ffe_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FFES[] $ffes
+ * @property-read int|null $ffes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\FFESItem[] $ffesItems
+ * @property-read int|null $ffes_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $manufacturingProducts
+ * @property-read int|null $manufacturing_products_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $manufacturingProductsAllocations
+ * @property-read int|null $manufacturing_products_allocations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\ManufacturingRevenueStream[] $manufacturingRevenueStreams
+ * @property-read int|null $manufacturing_revenue_streams_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Product[] $productCapacities
+ * @property-read int|null $product_capacities_count
+ * @property-read \App\Models\PropertyAcquisition|null $propertyAcquisition
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\PropertyAcquisitionBreakDown[] $propertyAcquisitionBreakDown
+ * @property-read int|null $property_acquisition_break_down_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\TradingRevenueStream[] $tradingRevenueStreams
+ * @property-read int|null $trading_revenue_streams_count
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan onlyCurrentCompany(?int $companyId = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan query()
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereAdditionalCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereCorporateTaxesRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereCreatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereDevelopmentDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereDevelopmentEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereDevelopmentStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereDevelopmentStartMonth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereDurationInYears($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereExchangeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereFinancialYearStartMonth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereFinishedGoodsInventoryCoverageDays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereFinishedGoodsInventoryCoverageDaysForTrading($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereInvestmentReturnRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereMainFunctionalCurrency($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereManufacturingProductsAllocationsType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereOperationDates($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereOperationStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan wherePerpetualGrowthRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereProductionCapacity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereRawMaterialsInventoryCoverageDays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereRegion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereRevenueStreams($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStateId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStudyDates($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStudyEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStudyName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereStudyStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FinancialPlan whereUpdatedAt($value)
+ */
+	class FinancialPlan extends \Eloquent implements \App\Interfaces\Models\IBaseModel, \App\Interfaces\Models\IExportable {}
 }
 
 namespace App\Models{
@@ -727,15 +1036,22 @@ namespace App\Models{
  * App\Models\GeneralExpense
  *
  * @property int $id
+ * @property string|null $name
+ * @property string|null $expense_id
+ * @property int|null $company_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Expense|null $expense
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuickPricingCalculator[] $quickPricingCalculators
  * @property-read int|null $quick_pricing_calculators_count
  * @method static \Illuminate\Database\Eloquent\Builder|GeneralExpense newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|GeneralExpense newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|GeneralExpense query()
+ * @method static \Illuminate\Database\Eloquent\Builder|GeneralExpense whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GeneralExpense whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|GeneralExpense whereExpenseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GeneralExpense whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|GeneralExpense whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|GeneralExpense whereUpdatedAt($value)
  */
 	class GeneralExpense extends \Eloquent {}
@@ -837,6 +1153,7 @@ namespace App\Models{
  * @property int $has_visit_casino_section
  * @property int $has_visit_meeting_section
  * @property int $has_visit_other_section
+ * @property mixed|null $exchange_rates
  * @property-read \App\Models\Acquisition|null $acquisition
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Casino[] $casinos
  * @property-read int|null $casinos_count
@@ -884,6 +1201,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|HospitalitySector whereDurationInYears($value)
  * @method static \Illuminate\Database\Eloquent\Builder|HospitalitySector whereDurationType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|HospitalitySector whereExchangeRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HospitalitySector whereExchangeRates($value)
  * @method static \Illuminate\Database\Eloquent\Builder|HospitalitySector whereFinancialYearStartMonth($value)
  * @method static \Illuminate\Database\Eloquent\Builder|HospitalitySector whereFoodCollectionPolicyType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|HospitalitySector whereFoodsGeneralCollectionPolicyInterval($value)
@@ -1083,11 +1401,7 @@ namespace App\Models{
  * @property string|null $start_date
  * @property string|null $end_date
  * @property string|null $period
- * @property string|null $applied_step
- * @property string|null $stepRate
  * @property string|null $fixedType
- * @property string|null $step_down
- * @property string|null $step_up
  * @property string|null $base_rate
  * @property string|null $margin_rate
  * @property string|null $pricing
@@ -1109,10 +1423,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Loan newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Loan newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Loan onlyCurrentCompany(?int $companyId = null)
- * @method static \Illuminate\Database\Eloquent\Builder|Loan onlyForSection(string $sectionName)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan query()
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereAcquisitionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Loan whereAppliedStep($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereBaseRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereBorrowingRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereCapitalizationType($value)
@@ -1137,11 +1449,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereRepaymentDuration($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereSectionName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereStartDate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Loan whereStepDown($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereStepDownInterval($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereStepDownRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Loan whereStepRate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Loan whereStepUp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereStepUpInterval($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereStepUpRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Loan whereUpdatedAt($value)
@@ -1177,6 +1486,40 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|ManagementFee whereUpdatedAt($value)
  */
 	class ManagementFee extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\ManufacturingRevenueStream
+ *
+ * @property int $id
+ * @property int|null $category_id
+ * @property int|null $product_id
+ * @property string|null $selling_uom
+ * @property string|null $production_uom
+ * @property string|null $product_to_selling_converter
+ * @property string $selling_start_date
+ * @property int|null $financial_plan_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Category|null $category
+ * @property-read \App\Models\FinancialPlan|null $financialPlan
+ * @property-read \App\Models\Product|null $product
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream whereFinancialPlanId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream whereProductToSellingConverter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream whereProductionUom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream whereSellingStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream whereSellingUom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ManufacturingRevenueStream whereUpdatedAt($value)
+ */
+	class ManufacturingRevenueStream extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -1284,15 +1627,22 @@ namespace App\Models{
  * App\Models\OtherDirectOperationExpense
  *
  * @property int $id
+ * @property string|null $name
+ * @property string|null $expense_id
+ * @property int|null $company_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Expense|null $expense
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuickPricingCalculator[] $quickPricingCalculators
  * @property-read int|null $quick_pricing_calculators_count
  * @method static \Illuminate\Database\Eloquent\Builder|OtherDirectOperationExpense newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OtherDirectOperationExpense newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OtherDirectOperationExpense query()
+ * @method static \Illuminate\Database\Eloquent\Builder|OtherDirectOperationExpense whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OtherDirectOperationExpense whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OtherDirectOperationExpense whereExpenseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OtherDirectOperationExpense whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OtherDirectOperationExpense whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OtherDirectOperationExpense whereUpdatedAt($value)
  */
 	class OtherDirectOperationExpense extends \Eloquent {}
@@ -1303,6 +1653,7 @@ namespace App\Models{
  * App\Models\OtherVariableManpowerExpense
  *
  * @property int $id
+ * @property string|null $expense_id
  * @property string $otherVariableManpowerExpenseAble_type
  * @property int $otherVariableManpowerExpenseAble_id
  * @property float $percentage_of_price
@@ -1313,6 +1664,7 @@ namespace App\Models{
  * @property int|null $creator_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Expense|null $expense
  * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $otherVariableManpowerExpenseAble
  * @method static \Illuminate\Database\Eloquent\Builder|OtherVariableManpowerExpense newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OtherVariableManpowerExpense newQuery()
@@ -1321,6 +1673,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|OtherVariableManpowerExpense whereCostPerUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OtherVariableManpowerExpense whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OtherVariableManpowerExpense whereCreatorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OtherVariableManpowerExpense whereExpenseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OtherVariableManpowerExpense whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OtherVariableManpowerExpense whereOtherVariableManpowerExpenseAbleId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OtherVariableManpowerExpense whereOtherVariableManpowerExpenseAbleType($value)
@@ -1338,6 +1691,8 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $name
+ * @property string|null $position_type
+ * @property int|null $company_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuickPricingCalculator[] $directManpowerExpenseAble
@@ -1347,9 +1702,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Position newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Position newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Position query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Position whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Position whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Position whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Position whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Position wherePositionType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Position whereUpdatedAt($value)
  */
 	class Position extends \Eloquent {}
@@ -1357,31 +1714,72 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\PricingPlan
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property int|null $company_id
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuickPricingCalculator[] $quickPricingCalculators
+ * @property-read int|null $quick_pricing_calculators_count
+ * @method static \Illuminate\Database\Eloquent\Builder|PricingPlan newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PricingPlan newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PricingPlan query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PricingPlan whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PricingPlan whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PricingPlan whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PricingPlan whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PricingPlan whereUpdatedAt($value)
+ */
+	class PricingPlan extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Product
  *
- * @property-read \App\Models\Category $category
- * @method static \Illuminate\Database\Eloquent\Builder|Product company()
+ * @property int $id
+ * @property string|null $name
+ * @property string|null $model_type
+ * @property string|null $category_id
+ * @property int|null $company_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Category|null $category
  * @method static \Illuminate\Database\Eloquent\Builder|Product newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Product query()
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereModelType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Product whereUpdatedAt($value)
  */
 	class Product extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
- * App\Models\ProductSeasonality
+ * App\Models\ProductionUnitOfMeasurement
  *
- * @property-read \App\Models\Category $category
- * @property-read \App\Models\Product $product
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSeasonality company()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSeasonality newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSeasonality newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ProductSeasonality query()
- * @mixin \Eloquent
+ * @property int $id
+ * @property string|null $name
+ * @property int|null $company_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductionUnitOfMeasurement newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductionUnitOfMeasurement newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductionUnitOfMeasurement query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductionUnitOfMeasurement whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductionUnitOfMeasurement whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductionUnitOfMeasurement whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductionUnitOfMeasurement whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ProductionUnitOfMeasurement whereUpdatedAt($value)
  */
-	class ProductSeasonality extends \Eloquent {}
+	class ProductionUnitOfMeasurement extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -1435,12 +1833,18 @@ namespace App\Models{
  * @property string|null $collection_policy_interval
  * @property string|null $collection_policy_type
  * @property string|null $collection_policy_value
- * @property int|null $hospitality_sector_id
+ * @property int|null $financial_plan_id
  * @property int|null $company_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string|null $has_land_section
- * @property-read \App\Models\HospitalitySector|null $hospitalitySector
+ * @property string|null $replacement_cost_name
+ * @property string|null $replacement_cost_rate
+ * @property string|null $replacement_interval
+ * @property string|null $ffe_replacement_interval
+ * @property string|null $ffe_replacement_cost_rate
+ * @property string|null $ffe_replacement_cost_name
+ * @property-read \App\Models\FinancialPlan|null $financialPlan
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Loan[] $loans
  * @property-read int|null $loans_count
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition newModelQuery()
@@ -1452,9 +1856,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereCollectionPolicyValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereFfeReplacementCostName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereFfeReplacementCostRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereFfeReplacementInterval($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereFinancialPlanId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereFirstPropertyDownPaymentPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereHasLandSection($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereHospitalitySectorId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereInstallmentInterval($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition wherePropertyAfterMonth($value)
@@ -1464,6 +1871,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition wherePropertyPaymentMethod($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition wherePropertyPurchaseCost($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition wherePurchaseDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereReplacementCostName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereReplacementCostRate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereReplacementInterval($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereSecondPropertyDownPaymentPercentage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisition whereUpdatedAt($value)
  */
@@ -1476,7 +1886,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string|null $model_name
- * @property int|null $hospitality_sector_id
+ * @property int|null $financial_plan_id
  * @property string|null $section_name
  * @property string|null $name
  * @property string|null $property_cost_percentage
@@ -1485,14 +1895,14 @@ namespace App\Models{
  * @property int|null $company_id
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\HospitalitySector|null $hospitalitySector
+ * @property-read \App\Models\HospitalitySector $hospitalitySector
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown query()
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown whereDepreciationDuration($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown whereHospitalitySectorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown whereFinancialPlanId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown whereItemAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyAcquisitionBreakDown whereModelName($value)
@@ -1509,6 +1919,7 @@ namespace App\Models{
  * App\Models\QuickPricingCalculator
  *
  * @property int $id
+ * @property int|null $pricing_plan_id
  * @property int $revenue_business_line_id
  * @property int $service_category_id
  * @property int $service_item_id
@@ -1556,6 +1967,7 @@ namespace App\Models{
  * @property-read int|null $other_direct_operation_expenses_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\OtherVariableManpowerExpense[] $otherVariableManpowerExpenses
  * @property-read int|null $other_variable_manpower_expenses_count
+ * @property-read \App\Models\PricingPlan|null $pricingPlan
  * @property-read \App\Models\Profitability|null $profitability
  * @property-read \App\Models\RevenueBusinessLine $revenueBusinessLine
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SalesAndMarketingExpense[] $salesAndMarketingExpenses
@@ -1583,6 +1995,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|QuickPricingCalculator wherePricePerDayWithVat($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QuickPricingCalculator wherePricePerDayWithoutVat($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QuickPricingCalculator wherePriceSensitivity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|QuickPricingCalculator wherePricingPlanId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QuickPricingCalculator whereRevenueBusinessLineId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QuickPricingCalculator whereSensitiveNetProfitAfterTaxesPerDay($value)
  * @method static \Illuminate\Database\Eloquent\Builder|QuickPricingCalculator whereSensitiveNetProfitAfterTaxesPercentage($value)
@@ -1706,6 +2119,45 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\RawMaterial
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property string|null $product_id
+ * @property string|null $quantity
+ * @property string|null $total_quantity
+ * @property string|null $waste_rate
+ * @property string|null $product_unit_of_measurement_id
+ * @property int $model_id
+ * @property string|null $model_name
+ * @property string|null $relation_name
+ * @property int $company_id
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Company $company
+ * @property-read \App\Models\Product|null $product
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial query()
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereModelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereModelName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereProductUnitOfMeasurementId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereRelationName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereTotalQuantity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RawMaterial whereWasteRate($value)
+ */
+	class RawMaterial extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\RevenueBusinessLine
  *
  * @property int $id
@@ -1737,6 +2189,27 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|RevenueBusinessLine whereUpdatedAt($value)
  */
 	class RevenueBusinessLine extends \Eloquent implements \App\Interfaces\Models\IHaveView, \App\Interfaces\Models\IHaveCompany, \App\Interfaces\Models\IHaveCreator, \App\Interfaces\Models\IBaseModel, \App\Interfaces\Models\IExportable {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\RevenueStreamType
+ *
+ * @property int $id
+ * @property string $name
+ * @property string|null $type
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|RevenueStreamType newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RevenueStreamType newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RevenueStreamType query()
+ * @method static \Illuminate\Database\Eloquent\Builder|RevenueStreamType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RevenueStreamType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RevenueStreamType whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RevenueStreamType whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RevenueStreamType whereUpdatedAt($value)
+ */
+	class RevenueStreamType extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -1785,18 +2258,52 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\SalesAllocation
+ *
+ * @property int $id
+ * @property string|null $type
+ * @property string|null $name
+ * @property string|null $company_id
+ * @property string|null $created_by
+ * @property string|null $updated_by
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation whereCreatedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAllocation whereUpdatedBy($value)
+ */
+	class SalesAllocation extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\SalesAndMarketingExpense
  *
  * @property int $id
+ * @property string|null $name
+ * @property string|null $expense_id
+ * @property int|null $company_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Expense|null $expense
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\QuickPricingCalculator[] $quickPricingCalculators
  * @property-read int|null $quick_pricing_calculators_count
  * @method static \Illuminate\Database\Eloquent\Builder|SalesAndMarketingExpense newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SalesAndMarketingExpense newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SalesAndMarketingExpense query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAndMarketingExpense whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalesAndMarketingExpense whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAndMarketingExpense whereExpenseId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalesAndMarketingExpense whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalesAndMarketingExpense whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SalesAndMarketingExpense whereUpdatedAt($value)
  */
 	class SalesAndMarketingExpense extends \Eloquent {}
@@ -1996,6 +2503,27 @@ namespace App\Models{
  * @mixin \Eloquent
  */
 	class Section extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\SellingUnitOfMeasurement
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property int|null $company_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|SellingUnitOfMeasurement newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SellingUnitOfMeasurement newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SellingUnitOfMeasurement query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SellingUnitOfMeasurement whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SellingUnitOfMeasurement whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SellingUnitOfMeasurement whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SellingUnitOfMeasurement whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SellingUnitOfMeasurement whereUpdatedAt($value)
+ */
+	class SellingUnitOfMeasurement extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -2227,6 +2755,40 @@ namespace App\Models{
  * @mixin \Eloquent
  */
 	class ToolTipData extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\TradingRevenueStream
+ *
+ * @property int $id
+ * @property int|null $category_id
+ * @property int|null $product_id
+ * @property string|null $selling_uom
+ * @property string|null $production_uom
+ * @property string|null $product_to_selling_converter
+ * @property string $selling_start_date
+ * @property int|null $financial_plan_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Category|null $category
+ * @property-read \App\Models\FinancialPlan|null $financialPlan
+ * @property-read \App\Models\Product|null $product
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream whereFinancialPlanId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream whereProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream whereProductToSellingConverter($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream whereProductionUom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream whereSellingStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream whereSellingUom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TradingRevenueStream whereUpdatedAt($value)
+ */
+	class TradingRevenueStream extends \Eloquent {}
 }
 
 namespace App\Models{

@@ -2,6 +2,18 @@
 @section('css')
 <x-styles.commons></x-styles.commons>
 <style>
+.sub-title--header{
+	font-size: 1.5rem !important;
+    margin-left: 20px !important;
+    color: black !important;
+}
+hr.subtitle-hr{
+	border:1px dashed #CCE2FD !important;
+	
+}
+input , select ,.filter-option,hr.title-hr{
+	border:1px solid #CCE2FD !important;
+}
     .ui-datepicker-calendar {
         display: none;
     }
@@ -346,8 +358,17 @@
                 </div>
             </div>
             <div class="row">
-                <hr style="flex:1;background-color:lightgray">
+                <hr class="title-hr" style="flex:1;background-color:lightgray">
             </div>
+			
+				<div class="row">
+					<div class="col-md-12">
+						  <div class="d-flex align-items-center ">
+                        <h3 class="font-weight-bold form-label kt-subheader__title sub-title--header small-caps mr-5" style=""> {{ __('Select From Existing Data') }} </h3>
+                    </div>
+					</div>
+				</div>
+				
             <div class="row manufacturing-repeater">
 
                 <div class="form-group row" style="flex:1;">
@@ -359,13 +380,12 @@
 
                                     @if(isset($model) && $model->manufacturingRevenueStreams->count() )
                                     @foreach($model->manufacturingRevenueStreams as $manufacturingRevenueStreams)
-                                    @include('admin.financial_plans.form.manufacturingRevenueStreams' , [
+                                    @include('admin.financial_plans.form.manufacturingRevenueStreams-old-data' , [
                                     'manufacturingRevenueStream'=>$manufacturingRevenueStreams
                                     ])
                                     @endforeach
                                     @else
-                                    @include('admin.financial_plans.form.manufacturingRevenueStreams' , [
-                                    ])
+                                    {{-- @include('admin.financial_plans.form.manufacturingRevenueStreams-old-data' , []) --}}
 
                                     @endif
 
@@ -390,14 +410,14 @@
                                 </div>
 
 
-                                <div class="col-md-3 mb-4 mt-4">
+                                {{-- <div class="col-md-3 mb-4 mt-4">
                                     <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Finished Goods Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="finished_goods_inventory_coverage_days" id="{{$type.'_'.'finished_goods_inventory_coverage_days' }}" :selected-value="isset($model) ? $model->getFinishedGoodsInventoryCoverageDays() : 0"></x-form.select>
-                                </div>
+                                </div> --}}
 
-                                <div class="col-md-3 mb-4 mt-4">
+                                {{-- <div class="col-md-3 mb-4 mt-4">
 
                                     <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Raw Material Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="raw_materials_inventory_coverage_days" id="{{$type.'_'.'raw_materials_inventory_coverage_days' }}" :selected-value="isset($model) ? $model->getRawMaterialsInventoryCoverageDays() : 0"></x-form.select>
-                                </div>
+                                </div> --}}
 
 
                             </div>
@@ -405,11 +425,75 @@
                     </div>
 
                 </div>
+				
+				
+				
 
 
             </div>
+			
+				<div class="row">
+					<div class="col-md-12">
+						<hr class="subtitle-hr">
+					</div>
+					<div class="col-md-12">
+						  <div class="d-flex align-items-center ">
+                        <h3 class="font-weight-bold form-label kt-subheader__title small-caps sub-title--header mr-5" style=""> {{ __('Add New Data') }} </h3>
+                    </div>
+					</div>
+				</div>
+			  <div class="row manufacturing-repeater">
+
+                <div class="form-group row" style="flex:1;">
+                    <div class="col-md-12 mt-3">
+						
+                        <div id="m_repeater_5" class="products-repeater">
+                            <div class="form-group  m-form__group row">
+                                <div data-repeater-list="new_manufacturingRevenueStreams" class="col-lg-12">
+                                    @include('admin.financial_plans.form.manufacturingRevenueStreams-new-data' , [
+                                    ])
+                                </div>
+                            </div>
+                            <div class="m-form__group form-group row">
+
+                                <div class="col-lg-12">
+                                    <div data-repeater-create="" class="btn btn btn-sm btn-success m-btn m-btn--icon m-btn--pill m-btn--wide {{__('right')}}" id="add-row">
+                                        <span>
+                                            <i class="fa fa-plus"> </i>
+                                            <span>
+                                                {{ __('Add') }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+
+
+                                {{-- <div class="col-md-3 mb-4 mt-4">
+                                    <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Finished Goods Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="finished_goods_inventory_coverage_days" id="{{$type.'_'.'finished_goods_inventory_coverage_days' }}" :selected-value="isset($model) ? $model->getFinishedGoodsInventoryCoverageDays() : 0"></x-form.select>
+                                </div> --}}
+{{-- 
+                                <div class="col-md-3 mb-4 mt-4">
+
+                                    <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Raw Material Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="raw_materials_inventory_coverage_days" id="{{$type.'_'.'raw_materials_inventory_coverage_days' }}" :selected-value="isset($model) ? $model->getRawMaterialsInventoryCoverageDays() : 0"></x-form.select>
+                                </div> --}}
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+				
+				
+				
+
+
+            </div>
+			
         </div>
     </div>
+	
+	
 
     {{-- End Manufacturing Revenue Stream Section  --}}
 
@@ -433,7 +517,7 @@
                 </div>
             </div>
             <div class="row">
-                <hr style="flex:1;background-color:lightgray">
+                <hr class="title-hr" style="flex:1;background-color:lightgray">
             </div>
             <div class="row trading-repeater">
 
@@ -571,18 +655,11 @@
                 , type: form.getAttribute('method')
                 , success: function(res) {
                     $('.save-form').prop('disabled', false)
-
                     Swal.fire({
                         icon: 'success'
                         , title: res.message,
-
                     });
-
                     window.location.href = res.redirectTo;
-
-
-
-
                 }
                 , complete: function() {
                     $('#enter-name').modal('hide');
@@ -881,11 +958,16 @@
         $(this).attr('disabled', true);
         const modalName = $(this).attr('data-modal-name');
         const modalType = $(this).attr('data-modal-type');
+	
+		
         const modal = $(this).closest('.modal');
         const value = modal.find('input.name-class-js').val();
         const previousSelectorSelector = $(this).attr('data-previous-select-selector');
         const previousSelectorValue = previousSelectorSelector ? $(previousSelectorSelector).val() : null;
         const previousSelectorNameInDb = $(this).attr('data-previous-select-name-in-db');
+		
+		const additionalColumn = $(this).attr('data-additional-column')
+		const additionalColumnValue = $(this).attr('data-additional-column-value')
 
         $.ajax({
             url: "{{ route('admin.store.new.modal',['company'=>$company->id ?? 0  ]) }}"
@@ -895,7 +977,9 @@
                 , "modalType": modalType
                 , "value": value
                 , "previousSelectorNameInDb": previousSelectorNameInDb
-                , "previousSelectorValue": previousSelectorValue
+                , "previousSelectorValue": previousSelectorValue,
+				'additionalColumn':additionalColumn,
+				"additionalColumnValue":additionalColumnValue
             }
             , type: "POST"
             , success: function(response) {
@@ -903,7 +987,8 @@
                 modal.find('input').val('');
                 $('.modal').modal('hide')
                 if (response.status) {
-                    const allSelect = $('select[data-modal-name="' + modalName + '"][data-modal-type="' + modalType + '"]');
+					
+                    const allSelect = $(that).closest('.kt-portlet').find('select[data-modal-name="' + modalName + '"][data-modal-type="' + modalType + '"]');
                     const allSelectLength = allSelect.length;
                     allSelect.each(function(index, select) {
                         var isSelected = '';

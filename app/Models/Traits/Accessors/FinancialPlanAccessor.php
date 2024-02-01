@@ -3,13 +3,10 @@
 namespace App\Models\Traits\Accessors;
 
 use App\Models\Currency;
-use App\Models\Product;
 use App\Models\Repositories\CurrencyRepository;
 use App\ReadyFunctions\CalculateDurationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-
 trait FinancialPlanAccessor
 {
 	public function getId(): int
@@ -520,6 +517,79 @@ trait FinancialPlanAccessor
 
 		return $result;
 	}
+	public function getOnlyDatesOfActiveStudy(array $studyDurationPerYear,array $dateIndexWithDate)
+	{
+		$result = [];
+		foreach ($studyDurationPerYear as $currentYear => $datesAndZerosOrOnes) {
+			foreach ($datesAndZerosOrOnes as $dateIndex => $zeroOrOneAtDate) {
+				if (is_numeric($dateIndex)) {
+					$dateFormatted =$dateIndexWithDate[$dateIndex];
+				} else {
+					$dateFormatted = $dateIndex;
+				}
+				$result[$dateFormatted] = $dateIndex;
+			}
+		}
+
+		return $result;
+	}
+	
+	public function calculateTotalOperatingDaysCountInEachYear(array $daysNumbersOfMonths, array $operationDurationPerYear)
+	{
+		$result = [];
+		foreach ($daysNumbersOfMonths as $year => $daysNumbersOfMonth) {
+			foreach ($daysNumbersOfMonth as $date => $numberOfDaysInMonth) {
+				$operationDurationAtDate = $operationDurationPerYear[$year][$date] ?? 0;
+				$result[$year][$date] = $numberOfDaysInMonth * $operationDurationAtDate;
+				$result['totalOfEachYear'][$year] = isset($result['totalOfEachYear'][$year]) ? $result['totalOfEachYear'][$year] + $result[$year][$date] : $result[$year][$date];
+			}
+		}
+
+		return $result;
+	}
+	
+	public function getStudyDateFormatted(array $datesAsStringAndIndex,array $datesIndexWithYearIndex,array $yearIndexWithYear,array $dateIndexWithDate)
+	{
+		$dateWithMonthNumber=App('dateWithMonthNumber');
+		$studyDurationPerYear = $this->getStudyDurationPerYear($datesAsStringAndIndex,$datesIndexWithYearIndex,$yearIndexWithYear,$dateIndexWithDate,$dateWithMonthNumber, true, true, false);
+	
+		return  $this->getOnlyDatesOfActiveStudy($studyDurationPerYear,$dateIndexWithDate);
+	}
+	public function getFirstDateIndexInYearIndex(array $datesAsStringAndIndex, int $yearIndex,array $datesIndexWithYearIndex,array $yearIndexWithYear,array $dateIndexWithDate)
+	{
+		
+		$studyDates = $this->getStudyDateFormatted($datesAsStringAndIndex,$datesIndexWithYearIndex,$yearIndexWithYear,$dateIndexWithDate);
+		foreach ($studyDates as $studyDateAsString=>$studyDateAsIndex) {
+			$currentYearIndex = $datesIndexWithYearIndex[$studyDateAsIndex];
+			if ($currentYearIndex == $yearIndex) {
+				return $studyDateAsIndex;
+			}
+		}
+
+		return null;
+	}
+	
+	public function getDaysNumbersOfMonth(array $datesAsStringAndIndex, array $years,array $datesIndexWithYearIndex,array $yearIndexWithYear,array $dateIndexWithDate)
+	{
+		$result = [];
+		foreach ($years as $yearIndex) {
+			$currentYear = $yearIndexWithYear[$yearIndex];
+			$dateAsIndex = $this->getFirstDateIndexInYearIndex($datesAsStringAndIndex, $yearIndex,$datesIndexWithYearIndex,$yearIndexWithYear,$dateIndexWithDate);
+			$dateAsString = $dateIndexWithDate[$dateAsIndex];
+			$firstMonthInCurrentYear = explode('-', $dateAsString)[1] ?? 1;
+			for ($monthNumber = $firstMonthInCurrentYear; $monthNumber <= 12; $monthNumber++) {
+				$monthNumber = sprintf('%02d', $monthNumber);
+				$date = '01-' . $monthNumber . '-' . $currentYear;
+				// 01-01-2023
+
+				$dateIndex = $datesAsStringAndIndex[$date];
+				$currentDate  = Carbon::make($date);
+				$result[$yearIndex][$dateIndex] = $currentDate->month($monthNumber)->daysInMonth;
+			}
+		}
+
+		return $result;
+	}
 	
 	public function getOperationDurationPerYear($operationStartDate ,array $datesAsStringAndIndex,array $datesIndexWithYearIndex,array $yearIndexWithYear,array $dateIndexWithDate,array $dateWithMonthNumber  , $asIndexes = true, $maxYearIsStudyEndDate = true)
 	{
@@ -597,8 +667,8 @@ trait FinancialPlanAccessor
 		if(!$data){
 			return 1 ;
 		}
-		if($columnName == 'net_working_hours_type'){
-			return $data->pivot->net_working_hours_type ;
+		if($columnName == 'net_working_hours_type' || $columnName == 'production_lines_count_type') {
+			return $data->pivot->{$columnName} ;
 		}
 		$data = convertJsonToArray($data->pivot->{$columnName});
 		$data = arrayToValueIndexes($data);
@@ -647,4 +717,9 @@ trait FinancialPlanAccessor
 
 		return $newItems;
 	}	
+	public function hasManufacturingRevenueStream()
+	{
+		return in_array('manufacturing',$this->getRevenueStreamTypes());
+	}
+	
 }

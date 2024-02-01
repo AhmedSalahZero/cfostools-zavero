@@ -1107,6 +1107,7 @@ trait HospitalitySectorAccessor
 		$casinoFacilityRevenue = $this->calculateFAndBFacilityRevenue($casinos, $monthlyGuestCountForRoom, $casinoFacilityChargesInflatedValue, $totalRoomsRevenue, $casinoFacilityInflatedChargesValue, $dates, $daysNumbersOfMonths, $operationDurationPerYear,$datesIndexWithYearIndex);
 		$totalCasinoFacilityRevenue = $casinoFacilityRevenue['total'] ?? [];
 		// 4 meeting facility revenue
+		//
 		$daysCountPerYear = $this->calculateTotalOperatingDaysCountInEachYear($daysNumbersOfMonths, $operationDurationPerYear);
 		$meetingFacilityRevenue = $this->calcMeetingFacilityRevenue($meetings, $meetingFacilityInflatedChargesValue, $dates, $operationDurationPerYearAsArray, $daysCountPerYear, $fAndBFacilityRevenue, $datesAsStringAndIndex,$datesIndexWithYearIndex,$yearIndexWithYear,$dateIndexWithDate,$dateWithMonthNumber);
 		

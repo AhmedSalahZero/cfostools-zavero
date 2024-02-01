@@ -23,10 +23,15 @@
 'previousSelectMustBeSelected'=>false ,
 'previousSelectSelector'=>'' ,
 'previousSelectTitle'=>'',
-'previousSelectNameInDB'=>''
+'previousSelectNameInDB'=>'',
+
+'additionalColumn'=>'',
+'additionalColumnValue'=>'',
+
 ])
+
 @if($label)
-<label class="form-label font-weight-bold @if($addNewModal) d-flex @endif "> {{$label}}
+<label class="form-label font-weight-bold @if($addNewModal) d-flex @endif "> {{$label}} 
 
 
     @if($isRequired)
@@ -40,7 +45,7 @@
 	data-previous-select-selector="{{ $previousSelectSelector }}"
 	data-previous-select-title="{{ $previousSelectTitle }}"
 	@endif 
-	 title="{{ __('Add New') }}" data-company-id="{{ $company->id ?? 0 }}" data-modal-name="{{ $addNewModalModalName }}" data-modal-type="{{ $addNewModalModalType }}" data-modal-title="{{ $addNewModalModalTitle }}" class="fa fa-plus cursor-pointer block ml-auto trigger-add-new-modal"></i>
+	 title="{{ __('Add New') }}" data-additional-column="{{ $additionalColumn }}" data-additional-column-value="{{ $additionalColumnValue }}" data-company-id="{{ $company->id ?? 0 }}" data-modal-name="{{ $addNewModalModalName }}" data-modal-type="{{ $addNewModalModalType }}" data-modal-title="{{ $addNewModalModalTitle }}" class="fa fa-plus cursor-pointer block ml-auto trigger-add-new-modal"></i>
     @endif
 </label>
 @endif
@@ -85,7 +90,7 @@ $basicClasses = $isSelect2 ? "form-control mb-1 select select2-select" :"form-co
 </select>
 {{-- {{ dd($attributes) }} --}}
 <div class="modal fade" id="modal-for-{{ $attributes->get('name') }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title modal-title-add-new-modal-{{ $addNewModalModalName }}"></h5>
@@ -109,8 +114,9 @@ $basicClasses = $isSelect2 ? "form-control mb-1 select select2-select" :"form-co
 				data-previous-select-title="{{ $previousSelectTitle }}"
 				data-previous-select-name-in-db="{{ $previousSelectNameInDB }}"
 				@endif 
-								
-				 data-company-id="{{ $company->id ?? 0 }}" data-modal-type="{{ $addNewModalModalType }}" data-modal-name="{{ $addNewModalModalName }}" data-modal-title="{{ $addNewModalModalTitle }}" type="button" class="btn btn-primary store-new-add-modal">{{ __('Save') }}</button>
+						data-additional-column="{{ $additionalColumn }}"		
+						data-additional-column-value="{{ $additionalColumnValue }}"		
+				 data-company-id="{{ $company->id ?? 0 }}" data-modal-type="{{ $addNewModalModalType ?: $attributes->get('data-modal-type') }}" data-modal-name="{{ $addNewModalModalName }}" data-modal-title="{{ $addNewModalModalTitle }}" type="button" class="btn btn-primary store-new-add-modal">{{ __('Save') }}</button>
             </div>
         </div>
     </div>

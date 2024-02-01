@@ -36,16 +36,13 @@ class ExpenseController
 			'expenseType'=>$expenseType
 		]);
 	}
-	public function store($company_id,Request $request,$expenseType){
+	public function store($company_id,$financial_plan_id,Request $request,$expenseType){
+		$financialPlan = FinancialPlan::find($financial_plan_id);
+		
 		$modelId = $request->get('model_id');
 		$modelName = $request->get('model_name');
 		$model = ('\App\Models\\'.$modelName)::find($modelId);
-		// dd($modelId,$modelName,$model);
-		// dd($modelId,$modelName , (array)$request->get('tableIds'),$model);
 		foreach((array)$request->get('tableIds') as $tableId){
-			// delete all first 
-			#::delete all
-			// dd($request->get($tableId));
 			$model->generateRelationDynamically($tableId,$expenseType)->delete();
 			foreach((array)$request->get($tableId) as  $tableDataArr){
 				if(isset($tableDataArr['name'])){
@@ -58,15 +55,26 @@ class ExpenseController
 						$tableDataArr['custom_collection_policy'] = sumDueDayWithPayment($tableDataArr['payment_rate '],$tableDataArr['due_days']);
 					}
 					$model->generateRelationDynamically($tableId,$expenseType)->create($tableDataArr);
-					
 				}
 			}
 		}
 		
+		
+		
+		$redirectUrl = route(App(FinancialPlanController::class)->getRedirectUrlName($financialPlan, $expenseType), [$company_id, $financialPlan->id ,[
+						'ManufacturingExpenses'=>'OperationalExpenses',
+						'OperationalExpenses'=>'SalesExpenses',
+						'SalesExpenses'=>'MarketExpense',
+						'MarketExpense'=>'GeneralExpense',
+						'GeneralExpense'=>null
+				][$expenseType]
+			]);
+		// dd($redirectUrl,$expenseType,);
+				
 		return response()->json([
 			'status'=>true ,
 			'message'=>__('Done'),
-			'redirectTo'=>route('admin.create.expense',['company'=>$company_id,'expenseType'=>$expenseType,'financialPlan'=>$model->id])
+			'redirectTo'=>$redirectUrl
 		]);
 		return redirect()->back()->with('success',__('Done'));
 	}

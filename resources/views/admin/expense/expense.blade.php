@@ -1,6 +1,12 @@
 @extends('layouts.dashboard')
 @section('css')
 <x-styles.commons></x-styles.commons>
+<style>
+html body .repeater-class i:not([data-repeating-direction="column"]) {
+    color: #055dac !important;
+}
+
+</style>
 @endsection
 @section('sub-header')
 <style>

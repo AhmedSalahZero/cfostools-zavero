@@ -13,6 +13,8 @@ use App\Models\ManufacturingRevenueStream;
 use App\Models\Product;
 use App\Models\PropertyAcquisition;
 use App\Models\PropertyAcquisitionBreakDown;
+use App\Models\RawMaterial;
+use App\Models\RowMaterial;
 use App\Models\TradingRevenueStream;
 use App\Models\Traits\Relations\Commons\CommonRelations;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -62,10 +64,13 @@ trait FinancialPlanRelation
 	public function productCapacities(){
 		return $this->belongsToMany(Product::class,'product_production_capacity','financial_plan_id','product_id')->withPivot([
 			'production_lines_count',
-			'max_production_per_hour',
+			'max_production_per_year',
+			'max_saleable_production_per_year',
 			'production_capacity_per_hour',
 			'net_working_hours_type',
-			'net_working_hours_per_days'
+			'production_lines_count_type',
+			'net_working_hours_per_days',
+			'product_waste_rate'
 		]);
 	}
 
@@ -94,6 +99,18 @@ trait FinancialPlanRelation
 		->where('expense_type',$expenseType)
 		;
 	} 
+	public function generateRelationDynamicallyForRowMaterial(string $relationName){
+		
+		return $this->hasMany(RawMaterial::class , 'model_id','id')->where('model_name','FinancialPlan')->where('relation_name',$relationName);
+		
+	} 
+	public function manufacturingProductsAllocations()
+	{
+		return $this->belongsToMany(Product::class,'financial_plan_product_allocation','financial_plan_id','product_id')
+		->withPivot(['percentage'])
+		;
+	}
+	
 		
 	
 }

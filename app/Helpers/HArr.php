@@ -130,5 +130,51 @@ class HArr
 
 		return $result;
 	}
+	public static function filterBasedOnCondition(array $items , string $condition , float $val1  , float $val2 = null  ){
+		/**
+		 * *note in case of [between] val1 must be the greater number [greater than val2] 
+		 */
 
+		 $result = [];
+		 foreach($items as $key=>$value){
+			if($condition == 'greater_than'){
+				$result[$key] = $value > $val1 ? $value : 0 ;
+			}
+			elseif($condition == 'greater_than_or_equal'){
+				$result[$key] = $value >= $val1 ? $value : 0 ;
+			}
+			elseif($condition == 'less_than'){
+				$result[$key] = $value < $val1 ? $value : 0 ;
+			}
+			elseif($condition == 'less_than_or_equal'){
+				$result[$key] = $value <= $val1 ? $value : 0 ;
+			}
+			elseif($condition == 'between_and_equal'){
+				$result[$key] = $value <= $val1 && $value >= $val2 ? $value : 0;
+			}
+			elseif($condition == 'between'){
+				$result[$key] = $value < $val1 && $value > $val2 ? $value : 0;
+			}
+			elseif($condition == 'equal'){
+				$result[$key] = $value== $val1  ? $value : 0;
+			}
+			
+		}			
+		return $result;
+	}
+	public static function getKeyFromMultiArr(array $items , array $keys,$onlyNumericMainKeys=true){
+		$newItems = [];
+		foreach($items as $id => $arr){
+			if($onlyNumericMainKeys && !is_numeric($id)){
+				continue ;
+			}
+			foreach($arr as $k2 => $v){
+				if(in_array($k2,$keys)){
+					$newItems[$id][$k2] = $v;
+				}
+			}
+			
+		}
+		return $newItems ;
+	}
 }

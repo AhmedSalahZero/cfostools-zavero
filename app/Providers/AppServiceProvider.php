@@ -68,6 +68,20 @@ class AppServiceProvider extends ServiceProvider
 	}
 	public function boot(Request $request)
 	{
+	
+		// $items = [
+		// 	'01-01-2025'=> 1 ,
+		// 	'01-02-2025'=>2,
+		// 	'01-03-2025'=>3,
+		// 	'01-04-2025'=>4,
+		// 	'01-05-2025'=>5,
+		// 	'01-06-2025'=>6,
+		// 	'01-07-2025'=>7,
+		// 	'01-08-2025'=>8,
+		// ];
+		
+		// $result = HArr::filterBasedOnCondition($items , 'equal',8);
+		// dd($result);
         Collection::macro('formatForSelect2',function(bool $isFunction , string $idAttrOrFunction ,string $titleAttrOrFunction ){
 			return $this->map(function($item) use ($isFunction , $idAttrOrFunction ,$titleAttrOrFunction ){
 				return [
@@ -150,15 +164,107 @@ class AppServiceProvider extends ServiceProvider
 		// dd($dates);
 		// $result = $monthlyFixedRepeating->calculate($expenses,'annually',Carbon::make($financialPlan->getStudyEndDate()) );
 		// dd()
-		$expenses = Expenses::where('id',386)->get();
+		// $expenses = Expenses::where('id',386)->get();
 		// dd($financialPlan);
 		// dd(Carbon::make($financialPlan->getStudyEndDate()));
-		$result = (new IntervallyRepeatingAmount())->calculate($expenses,Carbon::make($financialPlan->getStudyEndDate()));
-		dd($result);
+		// $result = (new IntervallyRepeatingAmount())->calculate($expenses,Carbon::make($financialPlan->getStudyEndDate()));
+		// dd($result);
 		
 		
 		// dd($result);
 		
+		
+		
+		
+		$purchasePrice = [
+			1=>
+			[
+				0=>100,
+				1=>110,
+				2=>120,
+				3=>130,
+				4=>140,
+				5=>150,
+				6=>160,
+				7=>170,
+				8=>180,
+				9=>190,
+				10=>200,
+				11=>210
+			]
+			];
+			
+			
+			$soldQuantity = [
+				1=>
+				[
+					0=>200,
+					1=>220,
+					2=>240,
+					3=>260,
+					4=>280,
+					5=>300,
+					6=>320,
+					7=>340,
+					8=>360,
+					9=>380,
+					10=>400,
+					11=>420
+				]
+				];
+			
+				$goodsInTransit = [
+					1=>
+					[
+						0=>0,
+						1=>10000,
+						2=>0,
+						3=>0,
+						4=>0,
+						5=>20000,
+						6=>0,
+						7=>0,
+						8=>0,
+						9=>0,
+						10=>0,
+						11=>0
+					]
+					];
+					
+					$goodsInTransitQuantity = [
+						1=>
+						[
+							0=>0,
+							1=>1500,
+							2=>0,
+							3=>0,
+							4=>0,
+							5=>0,
+							6=>0,
+							7=>0,
+							8=>0,
+							9=>0,
+							10=>0,
+							11=>0
+						]
+						];
+						
+				
+				
+			
+			// $trade = new \App\ReadyFunctions\Trade_RM_FG_InventoryQuantity();
+			// $conversationRate = 1 ;
+			// $tradeRawMaterialRMAndFinishedGodsFGQuantity = $trade->calculateTradeRawMaterialRMAndFinishedGodsFGQuantity('Product',$soldQuantity,$goodsInTransitQuantity,$dateIndexWithDate,$dateWithDateIndex,$conversationRate);
+			
+			
+			// $quantities = HArr::getKeyFromMultiArr($tradeRawMaterialRMAndFinishedGodsFGQuantity,['purchases','total_available','sold_quantity_rm_dispensed_quantity']);
+			// dd($tradeRawMaterialRMAndFinishedGodsFGQuantity);
+			// $tradeRawMaterialRmAndValue = $trade->calculateTradeRawMaterialRmAndValue($quantities,$purchasePrice,0,$goodsInTransit);
+			
+			
+			
+			
+			
 		View::share('langs', Language::all());
 		View::share('lang', app()->getLocale());
 		View::share('yearIndexWithYear', $yearIndexWithYear);

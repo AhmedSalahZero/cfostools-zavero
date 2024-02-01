@@ -15,7 +15,7 @@ class DepartmentExpense extends Model
 
 	protected $casts = [
 		'payload'=>'array',
-		'manpower_payload'=>'array'
+		'manpower_payload'=>'array',
 	];
 
 	public function hospitalitySector()

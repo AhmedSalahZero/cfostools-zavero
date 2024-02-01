@@ -6,35 +6,18 @@ use App\Models\Acquisition;
 use App\Models\Company;
 use App\Models\FFES;
 use App\Models\FinancialPlan;
+use App\Models\ProductionUnitOfMeasurement;
 use App\Models\PropertyAcquisition;
 use App\Models\QuickPricingCalculator;
 use App\Models\Repositories\financialPlanRepository;
-use App\ReadyFunctions\CalculateFixedLoanAtEndService;
-use App\ReadyFunctions\CalculateIrrService;
-use App\ReadyFunctions\CalculatePaybackPeriodService;
-use App\ReadyFunctions\CalculateProfitsEquationsService;
-use App\ReadyFunctions\FixedAssetsPayableEndBalance;
-use App\ReadyFunctions\ProjectsUnderProgress;
-use App\ReadyFunctions\PropertyInsurancePayableEndBalance;
-use App\ReadyFunctions\PropertyTaxesPayableEndBalance;
-use App\ReadyFunctions\RatioAnalysisService;
-use App\ReadyFunctions\SCurveService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class FinancialPlanController extends Controller
 {
 	private financialPlanRepository $financialPlanRepository;
-	private array $modelRelations  = [
-		'SalesChannel'=>'salesChannels',
-		'Room'=>'rooms',
-		'Food'=>'foods',
-		'Meeting'=>'meetings',
-		'Casino'=>'casinos',
-		'Other'=>'others'
-	];
 
 	public function __construct(FinancialPlanRepository $financialPlanRepository)
 	{
@@ -94,6 +77,7 @@ class FinancialPlanController extends Controller
 			'financial_plan_id' => $financialPlanId,
 			'payload' => $request->input('payload.' . $currentSectionName . '.' . $index),
 			'manpower_payload' => $request->input('manpower_payload.' . $currentSectionName . '.' . $index),
+			// 'manufacturing_allocations'=>$request->get('manufacturing_allocations',[])
 		];
 	}
 
@@ -188,7 +172,6 @@ class FinancialPlanController extends Controller
 		} 
 		else {
 			$redirectUrl = route($this->getRedirectUrlName($financialPlan, 'ffeCost'), [$companyId, $financialPlanId,'ManufacturingExpenses']);
-			// $redirectUrl = route($this->getRedirectUrlName($financialPlan, 'ffeCost'), [$companyId, $financialPlanId,'ManufacturingExpenses']);
 		}
 
 
@@ -212,7 +195,6 @@ class FinancialPlanController extends Controller
 		$yearIndexWithYear =App('yearIndexWithYear');
 		$dateIndexWithDate =App('dateIndexWithDate');
 		$dateWithMonthNumber=App('dateWithMonthNumber');
-		// dd($ffe);
 		return view('admin.financial_plans.ffe-cost', array_merge([
 			'storeRoute' => route('admin.store.financial.plan.ffe.cost', [
 				'financial_plan_id' => $financialPlanId,
@@ -349,7 +331,6 @@ class FinancialPlanController extends Controller
 	{
 		$company = Company::find($companyId);
 		$financialPlan = FinancialPlan::find($financialPlanId);
-		// dd($financialPlan);
 		$model = $financialPlan->getPropertyAcquisition();
 		$model = $model ? $model : new PropertyAcquisition();
 		$vars = array_merge(
@@ -444,54 +425,103 @@ class FinancialPlanController extends Controller
 		$yearIndexWithYear =App('yearIndexWithYear');
 		$dateIndexWithDate =App('dateIndexWithDate');
 		$dateWithMonthNumber=App('dateWithMonthNumber');
+		// $unitOfMeasurements = $financialPlan->manufacturingProducts->pluck('pivot.production_uom')->toArray() ;
+		// $productUnitOfSalesFormatted = ProductionUnitOfMeasurement::formatForSelectFromIds($unitOfMeasurements);
+		$datesAsStringAndIndex = $financialPlan->getDatesAsStringAndIndex();
+		$operationDurationPerYear = $financialPlan->getOperationDurationPerYear($operationStartDate,$datesAsStringAndIndex,$datesIndexWithYearIndex,$yearIndexWithYear,$dateIndexWithDate,$dateWithMonthNumber);
+		$yearsOfOperationDuration =  array_keys($operationDurationPerYear);
+		$daysNumbersOfMonths = $financialPlan->getDaysNumbersOfMonth($datesAsStringAndIndex, $yearsOfOperationDuration,$datesIndexWithYearIndex,$yearIndexWithYear,$dateIndexWithDate);
+		$daysCountPerYear = $financialPlan->calculateTotalOperatingDaysCountInEachYear($daysNumbersOfMonths, $operationDurationPerYear);
+		// $productionUnitOfMeasurements = DB::table('production_unit_of_measurements')->where('company_id',$companyId)->get();
+		$productionUnitOfMeasurements = ProductionUnitOfMeasurement::where('company_id',$companyId)->get()->formatForSelect2(true ,'getId','getName');
+		// dd($productionUnitOfMeasurements);
 		
 		return view('admin.financial_plans.production-capacity', array_merge([
 			'storeRoute' => route('admin.store.financial.plan.production.capacity', [
 				'financial_plan_id' => $financialPlanId,
 				'company' => $companyId
 			]),
+			
 			'type' => 'create',
 			'model' => $financialPlan,
+			
 			'yearsWithItsMonths' => $financialPlan->getOperationDurationPerYear( $operationStartDate,$financialPlan->getDatesAsStringAndIndex(),$datesIndexWithYearIndex,$yearIndexWithYear ,$dateIndexWithDate,$dateWithMonthNumber),
 			'financial_plan_id' => $financialPlanId,
 			'datesIndexWithYearIndex'=>$datesIndexWithYearIndex,
 			'studyCurrency' => $financialPlan->getCurrenciesForSelect(),
 			'navigators' => array_merge($this->getCommonNavigators($companyId, $financialPlanId), []),
 			'financialPlan'=>$financialPlan,
-			'products'=>$financialPlan->manufacturingProducts
+			'products'=>$financialPlan->manufacturingProducts,
+			'productionUnitOfMeasurements'=>$productionUnitOfMeasurements,
+			
+			'daysCountPerYear'=>$daysCountPerYear
 		], []));
 		// ], $financialPlan->calculateRoomRevenueAndGuestCount()));
 	}
 	public function storeProductionCapacity(Company $company,Request $request, $financialPlanId){
+		// dd($request->all());
 		$financialPlan = FinancialPlan::find($financialPlanId);
 		$productIds = $request->get('product_ids',[]) ;
-		// dd($request->all());
 		foreach($productIds as $productId){
 			$type=$request->input('type.'.$productId);
+			$productionLinesCountType=$request->input('product_lines_count_type.'.$productId);
+			// dd($productionLinesCountType);
 			$exists = $financialPlan->productCapacities()->wherePivot('product_id',$productId)->exists();
-			// dd($type,$request->input('net_working_hours_per_days.'.$productId.'.'.$type));
 			$pivotArr = [
-				'production_lines_count'=>json_encode($request->input('production_lines_count.'.$productId)),
+				'production_lines_count'=>json_encode($request->input('production_lines_count.'.$productId.'.'.$type)),
 				'net_working_hours_type'=>$type,
+				'production_lines_count_type'=>$productionLinesCountType,
 				'production_capacity_per_hour'=>json_encode($request->input('production_capacity_per_hour.'.$productId)),
+				'product_waste_rate'=>json_encode($request->input('product_waste_rate.'.$productId)),
 				'net_working_hours_per_days'=>json_encode($request->input('net_working_hours_per_days.'.$productId.'.'.$type)),
 				'max_working_days_per_year'=>json_encode($request->input('max_working_days_per_year.'.$productId)),
-				'max_production_per_hour'=>json_encode($request->input('max_production_per_hour.'.$productId)),
+				'max_production_per_year'=>json_encode($request->input('max_production_per_year.'.$productId)),
+				'max_saleable_production_per_year'=>json_encode($request->input('max_saleable_production_per_year.'.$productId)),
 			] ;
 			if($exists){
-				$financialPlan->productCapacities()->sync($productId,$pivotArr);			
+				$financialPlan->productCapacities()->detach($productId);			
+				$financialPlan->productCapacities()->attach($productId,$pivotArr);			
 			}else{
 				$financialPlan->productCapacities()->attach($productId,$pivotArr);			
 			}
+			
+			
+			
+			
+			
+			// stor raw material
+			
+			
+			$rawMaterialType = $request->get('raw_material_type');
+
+		$model = $financialPlan;
+		foreach((array)$request->get('tableIds') as $tableId){
+			$model->generateRelationDynamicallyForRowMaterial($rawMaterialType)->delete();
+			foreach((array)$request->input($rawMaterialType.'.'.$productId) as  $tableDataArr){
+				if(isset($tableDataArr['name'])){
+					$tableDataArr['relation_name']  = $rawMaterialType ;
+					$tableDataArr['company_id']  = $company->id  ;
+					$tableDataArr['product_id'] = $productId;
+					$tableDataArr['model_id']   = $financialPlan->id ;
+					$tableDataArr['model_name']   = 'FinancialPlan' ;
+					// if($tableDataArr['payment_terms'] == 'customize'){
+					// 	$tableDataArr['custom_collection_policy'] = sumDueDayWithPayment($tableDataArr['payment_rate '],$tableDataArr['due_days']);
+					// }
+					$model->generateRelationDynamicallyForRowMaterial($rawMaterialType)->create($tableDataArr);
+				}
+			}
+		}
+		
+			
+			
 		}
 		$message = __('Expenses has been saved successfully');
 		if ($request->get('redirect-to-same-page')) {
 			$redirectUrl = route('admin.view.financial.plan.production.capacity', [$company->id, $financialPlanId]);
 			$message = __('Please Wait');
 		} else {
-			$redirectUrl = route($this->getRedirectUrlName($financialPlan, 'ProductionCapacity'), [$company->id, $financialPlanId]);
+			$redirectUrl = route($this->getRedirectUrlName($financialPlan, 'ProductionCapacity'), [$company->id, $financialPlanId,'ManufacturingExpenses']);
 		}
-		// dd($redirectUrl);
 		return response()->json([
 			'status' => true,
 			'message' =>$message,
@@ -517,7 +547,6 @@ class FinancialPlanController extends Controller
 	{
 		$financialPlan = $this->financialPlanRepository->store($request);
 		$companyId = getCurrentCompanyId();
-
 		$redirectUrl = route($this->getRedirectUrlName($financialPlan, 'financialPlan'), [$companyId, $financialPlan->id]);
 		return response()->json([
 			'status' => true,
@@ -595,8 +624,6 @@ class FinancialPlanController extends Controller
 		// $redirectUrl = route('admin.view.financial.plans', getCurrentCompanyId());
 		$redirectUrl = route($this->getRedirectUrlName($financialPlan, 'financialPlan'), [$companyId, $financialPlan->id]);
 		
-		// dd($redirectUrl);
-		
 		
 		// $params = ['company' => $companyId, 'financial_plan_id' => $financialPlan->id] ;
 		
@@ -667,8 +694,6 @@ class FinancialPlanController extends Controller
 				'link'=>route('admin.view.financial.plan.ffe.cost',['company'=>$companyId,'ffe'=>$ffe->id,'financial_plan_id'=>$financialPlan->id])
 			];
 		})->toArray();
-		// dd($financialPlan->ffes);
-		// dd($ffeCosts);
 		return [
 				'studies'=>[
 					'name'=>__('Studies'),
@@ -808,7 +833,75 @@ class FinancialPlanController extends Controller
 					]
 				]
 			],
+			[
+				'name'=>__('Expenses'),
+				'link'=>'#',
+				'show'=>$canShowConditionalPage ,
+				'sub_items'=>[
+					[
+						'name'=>__('Manufacturing Expenses'),
+						'link'=>route('admin.view.financial.plans.manpower.expenses', [$companyId, $financialPlanId,'expenseType'=>'ManufacturingExpenses']),
+						'show'=>$financialPlan->hasManufacturingRevenueStream() && $canShowConditionalPage
+					],
+					[
+						'name'=>__('Manpower Operational Expenses'),
+						'link'=>route('admin.view.financial.plans.manpower.expenses', [$companyId, $financialPlanId,'expenseType'=>'OperationalExpenses']),
+						'show'=>!$financialPlan->hasManufacturingRevenueStream() && $canShowConditionalPage
+					],
+					[
+						'name'=>__('Manpower Sales Expenses'),
+						'link'=>route('admin.view.financial.plans.manpower.expenses', [$companyId, $financialPlanId,'expenseType'=>'SalesExpenses']),
+						'show'=>$canShowConditionalPage
+					],
+					[
+						'name'=>__('Manpower Market Expenses'),
+						'link'=>route('admin.view.financial.plans.manpower.expenses', [$companyId, $financialPlanId,'expenseType'=>'MarketExpense']),
+						'show'=>$canShowConditionalPage
+					],
+					[
+						'name'=>__('Manpower General Expenses'),
+						'link'=>route('admin.view.financial.plans.manpower.expenses', [$companyId, $financialPlanId,'expenseType'=>'GeneralExpenses']),
+						'show'=>$canShowConditionalPage
+					],
+					
+				]
+			],
+			
+			[
+				'name'=>__('Manpower Expenses'),
+				'link'=>'#',
+				'show'=>$canShowConditionalPage ,
+				'sub_items'=>[
+					[
+						'name'=>__('Manpower Manufacturing Expenses'),
+						'link'=>route('admin.create.expense', [$companyId, $financialPlanId,'expenseType'=>'ManufacturingExpenses']),
+						'show'=>$financialPlan->hasManufacturingRevenueStream() && $canShowConditionalPage 
+					],
+					[
+						'name'=>__('Operational Expenses'),
+						'link'=>route('admin.create.expense', [$companyId, $financialPlanId,'expenseType'=>'OperationalExpenses']),
+						'show'=>!$financialPlan->hasManufacturingRevenueStream()&&$canShowConditionalPage
+					],
+					[
+						'name'=>__('Sales Expenses'),
+						'link'=>route('admin.create.expense', [$companyId, $financialPlanId,'expenseType'=>'SalesExpense']),
+						'show'=>$canShowConditionalPage
+					],
+					[
+						'name'=>__('Marketing Expenses'),
+						'link'=>route('admin.create.expense', [$companyId, $financialPlanId,'expenseType'=>'MarketExpenses']),
+						'show'=>$canShowConditionalPage
+					],
+					[
+						'name'=>__('General Expenses'),
+						'link'=>route('admin.create.expense', [$companyId, $financialPlanId,'expenseType'=>'GeneralExpenses']),
+						'show'=>$canShowConditionalPage
+					],
+					
+				]
+			],
 
+			
 			// 'statement-reports' => [
 			// 	'name' => __('Statement Reports'),
 			// 	'link' => '#',
@@ -1081,7 +1174,6 @@ class FinancialPlanController extends Controller
 	{
 		// $currentModelName = Str::singular($currentModelName);
 		$canShowConditionalPage = !in_array(Auth()->user()->email , excludeUsers());
-
 		$redirectUrls = [
 			'financialPlan'=>[
 				'route'=>'#',
@@ -1093,20 +1185,20 @@ class FinancialPlanController extends Controller
 			],
 			//sssssssssssssssssssssss
 			'ManpowerManufacturingExpenses'=>[
-				'route'=>'admin.create.expense',
-				'isChecked'=>true 
+				'route'=>'admin.view.financial.plans.manpower.expenses',
+				'isChecked'=>$financialPlan->hasManufacturingRevenueStream() 
 			],
 			'ManufacturingExpenses'=>[
 				'route'=>'admin.create.expense',
-				'isChecked'=>true
+				'isChecked'=>$financialPlan->hasManufacturingRevenueStream()
 			],
 			'ManpowerOperationalExpenses'=>[
-				'route'=>'admin.create.expense',
-				'isChecked'=>true 
+				'route'=>'admin.view.financial.plans.manpower.expenses',
+				'isChecked'=>!$financialPlan->hasManufacturingRevenueStream() 
 			],
 			'OperationalExpenses'=>[
 				'route'=>'admin.create.expense',
-				'isChecked'=>true
+				'isChecked'=>!$financialPlan->hasManufacturingRevenueStream()
 			],
 			'ManpowerSalesExpenses'=>[
 				'route'=>'admin.view.financial.plans.manpower.expenses',
@@ -1146,109 +1238,6 @@ class FinancialPlanController extends Controller
 				'isChecked'=>true
 			],
 			
-			'SalesExpenses'=>[
-				'route'=>'admin.view.financial.plans.manpower.expenses',
-				'isChecked'=>true
-			],
-				'GeneralExpense'=>[
-				'route'=>'admin.view.financial.plans.manpower.expenses',
-				'isChecked'=>true
-			],'OperationalExpenses'=>[
-				'route'=>'admin.view.financial.plans.manpower.expenses',
-				'isChecked'=>true
-			],
-			'MarketExpense'=>[
-				'route'=>'admin.view.financial.plans.manpower.expenses',
-				'isChecked'=>true
-			],
-			'MarketExpense'=>[
-				'route'=>'admin.view.financial.plans.manpower.expenses',
-				'isChecked'=>true
-			],
-			
-			
-			// 'food'=>[
-			// 	'route'=>'admin.view.financial.plan.foods',
-			// 	'isChecked'=>true
-			// ],
-			// 'casino'=>[
-			// 	'route'=>'admin.view.financial.plan.casinos',
-			// 	'isChecked'=>$financialPlan->hasCasinoSection()
-			// ],
-			// 'meeting'=>[
-			// 	'route'=>'admin.view.financial.plan.meetings',
-			// 	'isChecked'=>$financialPlan->hasMeetingSection()
-			// ],
-			// 'other'=>[
-			// 	'route'=>'admin.view.financial.plan.other.revenues',
-			// 	'isChecked'=>$financialPlan->hasOtherSection()
-			// ],
-			// 'roomDirectExpense'=>[
-			// 	'route'=>'admin.view.financial.plan.rooms.direct.expenses',
-			// 	'isChecked'=>true
-			// ],
-			// 'foodDirectExpense'=>[
-			// 	'route'=>'admin.view.financial.plan.foods.direct.expenses',
-			// 	'isChecked'=>true
-			// ],
-			// 'casinoDirectExpense'=>[
-			// 	'route'=>'admin.view.financial.plan.casinos.direct.expenses',
-			// 	'isChecked'=>$financialPlan->hasCasinoSection()
-			// ],
-			// 'meetingDirectExpense'=>[
-			// 	'route'=>'admin.view.financial.plan.meeting.direct.expenses',
-			// 	'isChecked'=>$financialPlan->hasMeetingSection()
-			// ],
-			// 'otherDirectExpense'=>[
-			// 	'route'=>'admin.view.financial.plan.other.revenue.direct.expenses',
-			// 	'isChecked'=>$financialPlan->hasOtherSection()
-			// ],
-			// 'energyDirectExpense'=>[
-			// 	'route'=>'admin.view.financial.plan.energy.expenses',
-			// 	'isChecked'=>true
-			// ],
-			// 'generalDirectExpense'=>[
-			// 	'route'=>'admin.view.financial.plan.general.expenses',
-			// 	'isChecked'=>true
-			// ],
-			// 'marketingDirectExpense'=>[
-			// 	'route'=>'admin.view.financial.plan.marketing.expenses',
-			// 	'isChecked'=>true
-			// ],
-			// 'propertyDirectExpense'=>[
-			// 	'route'=>'admin.view.financial.plan.property.expenses',
-			// 	'isChecked'=>true
-			// ],
-			// 'managementFee'=>[
-			// 	'route'=>'admin.view.financial.plan.management.fees',
-			// 	'isChecked'=>true
-			// ],	
-			// 'startUpCost'=>[
-			// 	'route'=>'admin.view.financial.plan.start.up.cost',
-			// 	'isChecked'=>true
-			// ],
-			// 'propertyAcquisitionCost'=>[
-			// 	'route'=>'admin.view.financial.plan.property.acquisition.costs',
-			// 	'isChecked'=>$canShowConditionalPage&&true
-			// ],
-			// 'landAcquisitionCost'=>[
-			// 	'route'=>'admin.view.financial.plan.land.acquisition.costs',
-			// 	'isChecked'=>$canShowConditionalPage&&true
-			// ],
-			// 'ffeCost'=>[
-			// 	'route'=>'admin.view.financial.plan.ffe.cost',
-			// 	'isChecked'=>$canShowConditionalPage&&true
-			// ],
-			// 'incomeStatementDashboard'=>[
-			// 	'route'=>'admin.view.financial.plan.income.statement',
-			// 	'isChecked'=>$canShowConditionalPage&&true
-			// ],
-			// 'cashInOutReportDashboard'=>[
-			// 	'route'=>'admin.view.financial.plan.cash.in.out.report',
-			// 	'isChecked'=>$canShowConditionalPage&&true
-			// ],
-
-
 
 		];
 		$redirectUrl = null;
@@ -1265,7 +1254,7 @@ class FinancialPlanController extends Controller
 				$currentModelName = $nextModelName;
 			}
 		}
-
+		// dd($redirectUrl);
 		return $redirectUrl;
 	}
 
@@ -1350,7 +1339,8 @@ class FinancialPlanController extends Controller
 			'noManpowerExpenses'=>$noExpenses,
 			'studyCurrency' => $financialPlan->getCurrenciesForSelect(),
 			'daysDifference' => $recruitDate ? $financialPlan->getDiffBetweenOperationStartDateAndStudyStartDate($recruitDate) : null ,
-			'navigators' => array_merge($this->getCommonNavigators($companyId, $financialPlanId), [])
+			'navigators' => array_merge($this->getCommonNavigators($companyId, $financialPlanId), []),
+			'products'=>$financialPlan->manufacturingProducts
 		], []));
 	}
 	public function storeManpowerExpenses(Request $request, Company $company, $financialPlanId,$expenseType)
@@ -1387,34 +1377,26 @@ class FinancialPlanController extends Controller
 				}
 			}
 		}
-		// dd($request->all());
+		if($expenseType =='ManufacturingExpenses'){
+			$financialPlan->update([
+				'manufacturing_products_allocations_type'=>$request->get('manufacturing_products_allocations_type')
+			]);
+			// foreach
+			$financialPlan->manufacturingProductsAllocations()->detach();
+			foreach($request->get('manufacturing_allocations',[]) as $productId=>$percentage){
+				$financialPlan->manufacturingProductsAllocations()->attach($productId,[
+					'percentage'=>$percentage
+				]);
+			}
+			
+		}
 		$message = $expenseType. __(' has been saved successfully');
 		if ($request->get('redirect-to-same-page')) {
 			$redirectUrl = route('admin.view.financial.plans.manpower.expenses', [$companyId, $financialPlanId,$expenseType]);
 			$message = __('Please Wait');
 		} else {
-			$redirectUrl = route($this->getRedirectUrlName($financialPlan, $expenseType), [$companyId, $financialPlanId,[
-				'ManufacturingExpenses'=>'OperationalExpenses',
-				//  ManufacturingExpenses-OperationalExpenses - SalesExpenses  - MarketExpense  - GeneralExpense
-				'OperationalExpenses'=>'SalesExpenses',
-				'SalesExpenses'=>'MarketExpense',
-				'MarketExpense'=>'GeneralExpense',
-				'GeneralExpense'=>null
-			][$expenseType]]);
-			
-			// if($expenseType == 'GeneralExpense') // the last one
-			// {
-			// 	$redirectUrl = route($this->getRedirectUrlName($financialPlan, $expenseType), [$companyId, $financialPlanId,[
-			// 		'ManufacturingExpenses'=>'SalesExpenses',
-			// 		'SalesExpenses'=>'GeneralExpense',
-			// 		'GeneralExpense'=>'OperationalExpenses',
-			// 		'OperationalExpenses'=>'MarketExpense',
-			// 		'MarketExpense'=>null
-			// 	][$expenseType]]); 
-			// } 
+			$redirectUrl = route($this->getRedirectUrlName($financialPlan, 'Manpower'.$expenseType), [$companyId, $financialPlanId,$expenseType]);
 		}
-
-
 		return response()->json([
 			'status' => true,
 			'message' => $message,

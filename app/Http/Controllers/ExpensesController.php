@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\Expense;
-	use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -24,7 +24,7 @@ class ExpensesController extends Controller
 				$items[$expenseType][$index]['name'] =$expenseArr->name ;
 				$items[$expenseType][$index]['id'] =$expenseArr->id ;
 		}
-        return view('admin.expenses.index',compact('company','expenses','items'));
+return view('admin.expenses.index',compact('company','expenses','items'));
     }
 
     public function create(Company $company)

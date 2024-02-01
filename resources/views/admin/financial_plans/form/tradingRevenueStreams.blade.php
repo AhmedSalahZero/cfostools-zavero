@@ -30,7 +30,7 @@
 				 
 				 
                         <div class="col-md-12 ">
-                            <x-form.select :add-new-modal="true" :add-new-modal-modal-type="''" :add-new-modal-modal-name="'Category'" :add-new-modal-modal-title="__('Category')" :options="$categories" :add-new="false" :label="__('Category')" class="select2-select category_class  " data-filter-type="{{ $type }}" :all="false" name="category_id" id="{{$type.'_'.'category_id' }}" :selected-value="isset($tradingRevenueStream) ? $tradingRevenueStream->getCategoryId() : 0"></x-form.select>
+                            <x-form.select :additional-column="'model_type'" :additional-column-value="'TradingRevenueStream'" :add-new-modal="true" :add-new-modal-modal-type="''" :add-new-modal-modal-name="'Category'" :add-new-modal-modal-title="__('Category')" :options="$tradingCategories" :add-new="false" :label="__('Category')" class="select2-select category_class  " data-filter-type="{{ $type }}" :all="false" name="category_id" id="{{$type.'_'.'category_id' }}" :selected-value="isset($tradingRevenueStream) ? $tradingRevenueStream->getCategoryId() : 0"></x-form.select>
 						
                         </div>
 						     
@@ -51,7 +51,7 @@
 				            <option value="0">{{ __('All Products') }}</option>
 				        </select>
 				        @else --}}
-                            <x-form.select :add-new-modal="true" :add-new-modal-modal-type="''" :add-new-modal-modal-name="'Product'" :add-new-modal-modal-title="__('Product Name')" :previous-select-name-in-dB="'category_id'" :previous-select-must-be-selected="true" :previous-select-selector="'select.category_class'" :previous-select-title="__('Category')" :options="$products" :add-new="false" :label="__('Product Name')" class="select2-select product_class  " data-filter-type="{{ $type }}" :all="false" name="product_id" id="{{$type.'_'.'product_id' }}" :selected-value="isset($tradingRevenueStream) ? $tradingRevenueStream->getProductId() : 0"></x-form.select>
+                            <x-form.select :additional-column="'model_type'" :additional-column-value="'TradingRevenueStream'" :add-new-modal="true" :add-new-modal-modal-type="''" :add-new-modal-modal-name="'Product'" :add-new-modal-modal-title="__('Product Name')" :previous-select-name-in-dB="'category_id'" :previous-select-must-be-selected="true" :previous-select-selector="'select.category_class'" :previous-select-title="__('Category')" :options="$tradingProducts" :add-new="false" :label="__('Product Name')" class="select2-select product_class  " data-filter-type="{{ $type }}" :all="false" name="product_id" id="{{$type.'_'.'product_id' }}" :selected-value="isset($tradingRevenueStream) ? $tradingRevenueStream->getProductId() : 0"></x-form.select>
 				        {{-- @endif --}}
 				    </div>
 					

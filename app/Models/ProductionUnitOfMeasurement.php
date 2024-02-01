@@ -17,4 +17,15 @@ class ProductionUnitOfMeasurement extends Model
 	public static function getNameById($id){
 		return static::where('id',$id)->first() ? static::where('id',$id)->first()->getName() : null;
 	}
+	public static function formatForSelectFromIds(array $ids):array 
+	{
+		$items = [];
+		foreach($ids as $id){
+			$items[] = [
+				'title'=>self::getNameById($id),
+				'value'=>$id 
+			];
+		}
+		return $items;
+	}
 }

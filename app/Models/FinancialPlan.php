@@ -67,8 +67,14 @@ class  FinancialPlan extends Model implements IBaseModel,  IExportable
 			'company' => Company::find($currentCompanyId),
 			'redirectAfterSubmitRoute' => route('admin.view.financial.plans', ['company' => getCurrentCompanyId()]),
 			'currencies' => App(CurrencyRepository::class)->allFormattedForSelect(),
-			'categories'=>Category::where('company_id',$currentCompanyId)->get()->formatForSelect2(true ,'getId','getName'),
-			'products'=>Product::where('company_id',$currentCompanyId)->get()->formatForSelect2(true ,'getId','getName'),
+			'tradingCategories'=>Category::where('model_type','TradingRevenueStream')->where('company_id',$currentCompanyId)->get()->formatForSelect2(true ,'getId','getName'),
+			'manufacturingCategories'=>Category::where('model_type','ManufacturingRevenueStream')->where('company_id',$currentCompanyId)->get()->formatForSelect2(true ,'getId','getName'),
+			
+			
+			// 'tradingCategories'=>Category::where('model_type','TradingRevenueStream')->where('company_id',$currentCompanyId)->get()->formatForSelect2(true ,'getId','getName'),
+			// 'tradingCategories'=>Category::where('model_type','TradingRevenueStream')->where('company_id',$currentCompanyId)->get()->formatForSelect2(true ,'getId','getName'),
+			'manufacturingProducts'=>Product::where('company_id',$currentCompanyId)->where('model_type','ManufacturingRevenueStream')->get()->formatForSelect2(true ,'getId','getName'),
+			'tradingProducts'=>Product::where('company_id',$currentCompanyId)->where('model_type','TradingRevenueStream')->get()->formatForSelect2(true ,'getId','getName'),
 			'sellingUnitOfMeasurements'=>SellingUnitOfMeasurement::where('company_id',$currentCompanyId)->get()->formatForSelect2(true ,'getId','getName'),
 			'productionUnitOfMeasurements'=>ProductionUnitOfMeasurement::where('company_id',$currentCompanyId)->get()->formatForSelect2(true ,'getId','getName'),
 		];

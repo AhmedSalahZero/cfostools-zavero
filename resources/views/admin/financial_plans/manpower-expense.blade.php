@@ -74,7 +74,7 @@
 	                        <tr>
 
 	                            {{-- Foods Types	 --}}
-								  @php
+	                            @php
 	                            $order = 1 ;
 	                            @endphp
 	                            <td style="vertical-align:middle;text-transform:capitalize;text-align:left">
@@ -367,6 +367,10 @@
 
 
 	    </div>
+
+
+
+
 	    @endif
 
 
@@ -375,6 +379,63 @@
 	</div>
 
 	</div>
+
+
+
+	@if($noManpowerExpenses && $expenseType == 'ManufacturingExpenses')
+	<div class="kt-portlet">
+	    <div class="kt-portlet__body">
+
+	        <div class="row ">
+	            <div class="col-md-4">
+	                <h3 class="font-weight-bold form-label kt-subheader__title small-caps mr-5" style=""> {{ __('Allocate Mnafacturing Salaries Over products') }} </h3>
+	            </div>
+	            <div class="col-md-4">
+	                <select  name="manufacturing_products_allocations_type" class="form-control manufacturing_products_allocations_type-js" id="">
+	                    @foreach(['sales-percentage'=>__('Sales Percentage') , 'equally'=>__('Equally') , 'based-on-production-working-hours' => __('Based On Production Working Hours'),'customize'=>__('Customize')] as $key=>$title)
+	                    <option @if($model->manufacturing_products_allocations_type == $key) selected @endif value="{{ $key }}">{{ $title }}</option>
+	                    @endforeach
+	                </select>
+	            </div>
+	        </div>
+	        {{-- @endforeach  --}}
+	    </div>
+	</div>
+
+	<div class="kt-portlet" id="kt-portlet__body-js">
+	    <div class="kt-portlet__body">
+	        <div class="row" id="added_rows">
+	            @foreach($products as $product)
+				@php
+					$manufacturingProductAllocation = $model->manufacturingProductsAllocations()->where('product_id',$product->id)->first() ;
+				@endphp
+	            <div class="col-md-6">
+	                <div class="form-group validated">
+	                    <label class="form-label font-weight-bold"> {{__("Product")}} @include('star') </label>
+	                    <div class="form-group-sub">
+	                        <input  type="text" class="form-control" readonly value="{{ $product->getName() }}" />
+	                    </div>
+	                </div>
+	            </div>
+	            <div class="col-md-6">
+	                <div class="form-group validated">
+	                    <label class="form-label font-weight-bold"> {{__("Percentage")}} @include('star')</label>
+	                    <div class="form-group-sub">
+						
+	                        <input type="number" name="manufacturing_allocations[{{ $product->id }}]" class="form-control only-percentage-allowed" value="{{ $manufacturingProductAllocation ? $manufacturingProductAllocation->pivot->percentage : 0 }}"  placeholder="{{ __('Percentage') }}">
+	                    </div>
+	                </div>
+	            </div>
+	            @endforeach
+
+
+
+	        </div>
+	    </div>
+	</div>
+	@endif
+
+
 	{{-- end of Rooms Manpower Expenses --}}
 	@if(!$canViewAddManpowerBtn)
 	<x-save-or-back :btn-text="__('Create')" />
@@ -418,6 +479,16 @@
 	        parent.find('.html-for-adr_at_operation_date[data-id="' + roomTypeId + '"]').val(number_format(result))
 
 	    })
+		$(document).on('change','.manufacturing_products_allocations_type-js',function(){
+			const val = $(this).val()
+			if(val == 'customize'){
+				$('#kt-portlet__body-js').show()
+			}else{
+				$('#kt-portlet__body-js').hide()
+			}
+			
+		})
+		$('.manufacturing_products_allocations_type-js').trigger('change');
 
 	</script>
 	@endpush

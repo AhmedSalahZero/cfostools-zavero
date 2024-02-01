@@ -221,16 +221,9 @@ Route::middleware([])->group(function () {
 				
 				Route::get('financial-plans/{financial_plan_id}/property-acquisition-costs', [FinancialPlanController::class, 'viewPropertyAcquisitionCosts'])->name('admin.view.financial.plan.property.acquisition.costs');
 				Route::post('financial-plans/{financial_plan_id}/property-acquisition-costs', [FinancialPlanController::class, 'storePropertyAcquisitionCosts'])->name('admin.store.financial.plan.property.acquisition.costs');
-				
-				
-				
 				Route::get('financial-plans/{financialPlan}/expenses/create/{expenseType}', [ExpenseController::class, 'create'])->name('admin.create.expense');
 				Route::post('financial-plans/{financialPlan}/expenses/create/{expenseType}', [ExpenseController::class, 'store'])->name('admin.store.expense');
-				
-				// Route::get('expenses/create/{expenseType}', [ExpenseController::class, 'create'])->name('admin.create.expense');
-				// Route::post('expenses/create/{expenseType}', [ExpenseController::class, 'store'])->name('admin.store.expense');
-				
-				
+				Route::resource('sales-allocations', 'SalesAllocationController');
 				Route::resource('expenses', 'ExpensesController');
 				Route::resource('positions', 'PositionsController');
 				Route::resource('categories', 'CategoriesController');

@@ -1304,6 +1304,7 @@ $dateIndexWithDate =App('dateIndexWithDate');
 			'meetings' => $meetings = $hospitalitySector->getMeetings(),
 			//'rooms' =>  $hospitalitySector->getRooms(),
 			//'annualAvailableRoomsNights' => [],
+			
 			//	'avgDailyRate' => $hospitalitySector->getAvgDailyRate(),
 			//'roomCurrency' => $hospitalitySector->getRoomCurrency(),
 			'studyCurrency' => $hospitalitySector->getCurrenciesForSelect(),
@@ -4872,6 +4873,7 @@ $dateIndexWithDate =App('dateIndexWithDate');
 		$model = new ('\App\Models\\' . $request->get('modalName'));
 		$value = $request->get('value');
 		$typeColumn = strtolower($request->get('modalName')) . '_type';
+		$typeColumn = $typeColumn == 'category_type' ? 'model_type' : $typeColumn; 
 		$type = $request->get('modalType');
 		
 		$previousSelectorNameInDb = $request->get('previousSelectorNameInDb');
@@ -4881,11 +4883,15 @@ $dateIndexWithDate =App('dateIndexWithDate');
 		if($type){
 			$modelName = $modelName->where($typeColumn,$type)	;
 		}
+	
 		$modelName = $modelName->where('name',$value)->first();
 		if($modelName){
 			return response()->json([
 				'status'=>false ,
 			]);
+		}
+		if($request->get('additionalColumn')){
+			$model->{$request->get('additionalColumn')} = $request->get('additionalColumnValue');
 		}
 		$model->company_id = $companyId;
 		$model->name = $value;
@@ -4893,10 +4899,10 @@ $dateIndexWithDate =App('dateIndexWithDate');
 			$model->{$typeColumn} = $type;
 		}
 		if($previousSelectorNameInDb){
-			
 			$model->{$previousSelectorNameInDb} = $previousSelectorValue;
 		}
 		$model->save();
+		// dd('good');
 		return response()->json([
 			'status'=>true ,
 			'value'=>$value ,

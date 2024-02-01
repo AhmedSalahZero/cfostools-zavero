@@ -36,15 +36,15 @@ var FormRepeater = (function () {
     };
     // m_repeater_2
 	var appendNewOptionsToAllSelects = function(currentRepeaterItem){
+		
 		if($('[data-modal-title]').length){
 			let currentSelect = $(currentRepeaterItem).find('select').attr('data-modal-name');
 			let modalType = $(currentRepeaterItem).find('select').attr('data-modal-type');
 			let selects = {};
-			$('select[data-modal-name="'+currentSelect+'"][data-modal-type="'+modalType+'"] option').each(function(index,option){
+			$(currentRepeaterItem).closest('.kt-portlet').find('select[data-modal-name="'+currentSelect+'"][data-modal-type="'+modalType+'"] option').each(function(index,option){
 				selects[$(option).attr('value')] = $(option).html() ;
 			});
-			
-			$('select[data-modal-name="'+currentSelect+'"][data-modal-type="'+modalType+'"]').each(function(index,select){
+			$(currentRepeaterItem).closest('.kt-portlet').find('select[data-modal-name="'+currentSelect+'"][data-modal-type="'+modalType+'"]').each(function(index,select){
 				var selectedValue =  $(select).val() ;
 				var currentOptions = '';
 				var currentOptionsValue = [];
@@ -61,8 +61,7 @@ var FormRepeater = (function () {
 						currentOptionsValue.push(allOptionValue);
 					}
 				}
-				$(select).empty().append(currentOptions).selectpicker('refresh').trigger('change');
-				
+				$(select).empty().append(currentOptions).selectpicker('refresh');
 			})
 		}
 	}
