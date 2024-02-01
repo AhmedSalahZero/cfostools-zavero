@@ -153,7 +153,7 @@ class AppServiceProvider extends ServiceProvider
 		$monthlyFixedRepeating = new FixedRepeatingWithInflation();
 		$expenses = Expenses::get();
 		$financialPlan =FinancialPlan::first();
-		$operationDates = (array)json_decode($financialPlan->operation_dates);
+		$operationDates =$financialPlan ?  (array)json_decode($financialPlan->operation_dates) : [];
 		// dd();
 		$datesAsStringAndIndex = $financialPlan->getDatesAsStringAndIndex();
 		
