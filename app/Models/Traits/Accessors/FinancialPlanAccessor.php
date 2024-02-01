@@ -663,14 +663,14 @@ trait FinancialPlanAccessor
 	public function getProductionLineForProductAtYear(int $productId , int $year,string $columnName){
 		$data = $this->productCapacities()->wherePivot('product_id',$productId)->first() ;
 		if(!$data){
-			return 1 ;
+			return 0 ;
 		}
 		if($columnName == 'net_working_hours_type' || $columnName == 'production_lines_count_type') {
 			return $data->pivot->{$columnName} ;
 		}
 		$data = convertJsonToArray($data->pivot->{$columnName});
 		$data = arrayToValueIndexes($data);
-		return $data && isset($data[$year]) ? $data[$year] : 1;
+		return $data && isset($data[$year]) ? $data[$year] : 0;
 		
 	}
 	public function getDevelopmentEndDate()
