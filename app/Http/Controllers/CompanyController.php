@@ -123,6 +123,28 @@ class CompanyController extends Controller
      */
     public function update(Request $request, Company $companySection)
     {
+		SellingUnitOfMeasurement::where('company_id',$companySection->id )->delete();
+		foreach(getDefaultSellingUOM() as $defaultSellingUnitArr){
+			SellingUnitOfMeasurement::create([
+				'name'=>$defaultSellingUnitArr['value'],
+				'company_id'=>$companySection->id 
+			]);
+		}
+		ProductionUnitOfMeasurement::where('company_id',$companySection->id)->delete();
+		foreach(getDefaultProductionUOM() as $defaultProductionUnitArr){
+			ProductionUnitOfMeasurement::create([
+				'name'=>$defaultProductionUnitArr['value'],
+				'company_id'=>$companySection->id 
+			]);
+		}
+		Currency::where('company_id',$companySection->id)->delete();
+		foreach(getDefaultCurrencies() as $currencyArr){
+			Currency::create([
+				'name'=>$currencyArr['value'],
+				'company_id'=>$companySection->id 
+			]);
+		}
+		
         toastr()->success('Updated Successfully');
         $companySection->update($request->except('image'));
         ImageSave::saveIfExist('image',$companySection);

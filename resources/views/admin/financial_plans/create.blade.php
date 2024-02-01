@@ -441,14 +441,7 @@
                                 </div>
 
 
-                                {{-- <div class="col-md-3 mb-4 mt-4">
-                                    <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Finished Goods Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="finished_goods_inventory_coverage_days" id="{{$type.'_'.'finished_goods_inventory_coverage_days' }}" :selected-value="isset($model) ? $model->getFinishedGoodsInventoryCoverageDays() : 0"></x-form.select>
-                            </div> --}}
-
-                            {{-- <div class="col-md-3 mb-4 mt-4">
-
-                                    <x-form.select :options="getInventoryCoverageDays()" :add-new="false" :is-required="true" :label="__('Raw Material Inventory Coverage Days')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="raw_materials_inventory_coverage_days" id="{{$type.'_'.'raw_materials_inventory_coverage_days' }}" :selected-value="isset($model) ? $model->getRawMaterialsInventoryCoverageDays() : 0"></x-form.select>
-                        </div> --}}
+                             
 
 
                     </div>
@@ -658,7 +651,8 @@
 	
     </div>
 </div>
-
+</div>
+</div>
 
 {{-- End Trading Revenue Stream Section  --}}
 

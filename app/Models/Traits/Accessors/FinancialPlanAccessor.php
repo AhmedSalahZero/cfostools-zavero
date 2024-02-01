@@ -717,7 +717,7 @@ trait FinancialPlanAccessor
 	}	
 	public function hasManufacturingRevenueStream()
 	{
-		return in_array('manufacturing',$this->getRevenueStreamTypes());
+		return in_array('manufacturing',(array)$this->getRevenueStreamTypes());
 	}
 	public function getStudyIncludes()
 	{
