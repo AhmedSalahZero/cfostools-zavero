@@ -45,20 +45,20 @@ class CompanyController extends Controller
         $companySection = Company::create($request->except('image'));
 		foreach(getDefaultSellingUOM() as $defaultSellingUnitArr){
 			SellingUnitOfMeasurement::create([
-				'name'=>$defaultSellingUnitArr['value'],
+				'name'=>$defaultSellingUnitArr['title'],
 				'company_id'=>$companySection->id 
 			]);
 		}
 		foreach(getDefaultProductionUOM() as $defaultProductionUnitArr){
 			ProductionUnitOfMeasurement::create([
-				'name'=>$defaultProductionUnitArr['value'],
+				'name'=>$defaultProductionUnitArr['title'],
 				'company_id'=>$companySection->id 
 			]);
 		}
 		
 		foreach(getDefaultCurrencies() as $currencyArr){
 			Currency::create([
-				'name'=>$currencyArr['value'],
+				'name'=>$currencyArr['title'],
 				'company_id'=>$companySection->id 
 			]);
 		}
@@ -126,21 +126,21 @@ class CompanyController extends Controller
 		SellingUnitOfMeasurement::where('company_id',$companySection->id )->delete();
 		foreach(getDefaultSellingUOM() as $defaultSellingUnitArr){
 			SellingUnitOfMeasurement::create([
-				'name'=>$defaultSellingUnitArr['value'],
+				'name'=>$defaultSellingUnitArr['title'],
 				'company_id'=>$companySection->id 
 			]);
 		}
 		ProductionUnitOfMeasurement::where('company_id',$companySection->id)->delete();
 		foreach(getDefaultProductionUOM() as $defaultProductionUnitArr){
 			ProductionUnitOfMeasurement::create([
-				'name'=>$defaultProductionUnitArr['value'],
+				'name'=>$defaultProductionUnitArr['title'],
 				'company_id'=>$companySection->id 
 			]);
 		}
 		Currency::where('company_id',$companySection->id)->delete();
 		foreach(getDefaultCurrencies() as $currencyArr){
 			Currency::create([
-				'name'=>$currencyArr['value'],
+				'name'=>$currencyArr['title'],
 				'company_id'=>$companySection->id 
 			]);
 		}
