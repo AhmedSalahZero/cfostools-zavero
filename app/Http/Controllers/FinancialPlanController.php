@@ -9,7 +9,7 @@ use App\Models\FinancialPlan;
 use App\Models\ProductionUnitOfMeasurement;
 use App\Models\PropertyAcquisition;
 use App\Models\QuickPricingCalculator;
-use App\Models\Repositories\financialPlanRepository;
+use App\Models\Repositories\FinancialPlanRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 
 class FinancialPlanController extends Controller
 {
-	private financialPlanRepository $financialPlanRepository;
+	private FinancialPlanRepository $financialPlanRepository;
 
 	public function __construct(FinancialPlanRepository $financialPlanRepository)
 	{
@@ -643,7 +643,7 @@ class FinancialPlanController extends Controller
 
 	public function export(Request $request)
 	{
-		// return (new HospitalitySectorExport($this->financialPlanRepository->export($request), $request))->download();
+		// return (new HospitalitySectorExport($this->FinancialPlanRepository->export($request), $request))->download();
 	}
 
 	public function exportReport(Request $request)
