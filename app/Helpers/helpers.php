@@ -1455,21 +1455,27 @@ function getDefaultCurrencies()
 	return [
 		[
 			'name'=>'EGP',
+			'value'=>'EGP',
 		],
 		[
-			'name'=>'USD'
+			'name'=>'USD',
+			'value'=>'USD',
 		],
 		[
-			'name'=>'EURO'
+			'name'=>'EURO',
+			'value'=>'EURO',
 		],
 		[
-			'name'=>'AED'
+			'name'=>'AED',
+			'value'=>'AED',
 		],
 		[
-			'name'=>'SAR'
+			'name'=>'SAR',
+			'value'=>'SAR'
 		],
 		[
-			'name'=>'QAR'
+			'name'=>'QAR',
+			'value'=>'QAR'
 		]
 	];
 }
