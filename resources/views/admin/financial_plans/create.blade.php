@@ -87,7 +87,7 @@
 																		'service'=>['title'=>'Service','value'=>'service'],
 																		'service-with-inventory'=>['title'=>'Service With Inventory','value'=>'service-with-inventory'],
 																	  
-																	  ]" :add-new="false" :multiple="true" :label="__('Revenue Stream')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="revenue_streams[]" id="{{$type.'_'.'revenue_streams' }}" :selected-value="isset($model) ? $model->getRevenueStreamTypes() : 0"></x-form.select>
+																	  ]" :add-new="false" :multiple="true" :label="__('Revenue Stream')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="revenue_streams[]" id="{{'revenue_streams_id' }}" :selected-value="isset($model) ? $model->getRevenueStreamTypes() : 0"></x-form.select>
                     </div>
 
 
@@ -343,26 +343,26 @@
                     <div class="col-md-4 mb-4">
                         <x-form.select :is-select2="false" :is-required="true" :options="[
 							[
+								'title'=>__('Only Local Sales'),
+								'value'=>'only-local-sales'
+							],
+							[
 								'title'=>__('Local And Export Sales'),
 								'value'=>'local-and-export-sales',
 							],
-							[
-								'title'=>__('Only Local Sales'),
-								'value'=>'only-local-sales'
-							]
 						]" :add-new="false" :label="__('Does This Study Includes')" class="" data-filter-type="{{ $type }}" :all="false" name="study_includes" id="{{$type.'_'.'study_includes' }}" :selected-value="isset($model) ? $model->getStudyIncludes() : 'only-local-sales'"></x-form.select>
                     </div>
-					
-					<div class="col-md-4 mb-4 mb-4 ">
+
+                    <div class="col-md-4 mb-4 mb-4 ">
                         <x-form.select :is-required="true" :options="[
 																		'sales-channel'=>['title'=>__('Sales Channel'),'value'=>'sales-channel'],
 																		'zone'=>['title'=>__('Zone'),'value'=>'zone'],
 																		'bussiness-sector'=>['title'=>__('Business Sector'),'value'=>'business-sector'],
 																		'branch'=>['title'=>__('Branch'),'value'=>'branch'],
 																	  
-																	  ]" :add-new="false" :multiple="true" :label="__('Do You Want Sales Allocations')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="add_allocations[]" id="{{$type.'_'.'add_allocations' }}" :selected-value="isset($model) ? $model->getAddAllocations() : 0"></x-form.select>
+																	  ]" :add-new="false" :multiple="true" :label="__('Does This Study Includes Sales Allocation (Multi Selection)')" class="select2-select   " data-filter-type="{{ $type }}" :all="false" name="add_allocations[]" id="{{$type.'_'.'add_allocations' }}" :selected-value="isset($model) ? $model->getAddAllocations() : 0"></x-form.select>
                     </div>
-					
+
 
                     <br>
                     <hr>
@@ -375,7 +375,7 @@
 
     {{-- Start Manufacturing Revenue Stream Section  --}}
 
-    <div class="kt-portlet">
+    <div class="kt-portlet" id="manufacturing-id"> 
         <div class="kt-portlet__body">
             <div class="row">
                 <div class="col-md-10">
@@ -388,10 +388,10 @@
                     <div class="btn active-style show-hide-repeater" data-query=".manufacturing-repeater">{{ __('Show/Hide') }}</div>
                 </div>
             </div>
+		@if(isset($model) && $model->manufacturingRevenueStreams->count())
             <div class="row">
                 <hr class="title-hr" style="flex:1;background-color:lightgray">
             </div>
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="d-flex align-items-center ">
@@ -462,6 +462,7 @@
 
 
     </div>
+			@endif 
 
     <div class="row">
         <div class="col-md-12">
@@ -534,7 +535,7 @@
 
 {{-- Start Trading Revenue Stream Section  --}}
 
-<div class="kt-portlet">
+<div class="kt-portlet" id="trading-id">
     <div class="kt-portlet__body">
         <div class="row">
             <div class="col-md-10">
@@ -547,6 +548,7 @@
                 <div class="btn active-style show-hide-repeater" data-query=".trading-repeater">{{ __('Show/Hide') }}</div>
             </div>
         </div>
+		 @if(isset($model) && $model->tradingRevenueStreams->count() )
         <div class="row">
             <hr class="title-hr" style="flex:1;background-color:lightgray">
         </div>
@@ -557,28 +559,28 @@
 
 
                     <div id="m_repeater_3" class="products-repeater">
-                        <div class="form-group  m-form__group row">
-                            <div data-repeater-list="tradingRevenueStreams" class="col-lg-12">
+                     
+						
+						
+						   <div class="form-group  m-form__group row">
+                                <div data-repeater-list="tradingRevenueStreams" class="col-lg-12">
 
-                                @if(isset($model) && $model->tradingRevenueStreams->count() )
-                                @foreach($model->tradingRevenueStreams as $tradingRevenueStreams)
-                                @include('admin.financial_plans.form.tradingRevenueStreams' , [
-                                'tradingRevenueStream'=>$tradingRevenueStreams
-                                ])
-                                @endforeach
-                                @else
-                                @include('admin.financial_plans.form.tradingRevenueStreams' , [
-                                ])
-
-                                @endif
-
+                                   
+                                    @foreach($model->tradingRevenueStreams as $tradingRevenueStreams)
+                                    @include('admin.financial_plans.form.tradingRevenueStreams-old-data' , [
+                                    'tradingRevenueStream'=>$tradingRevenueStreams
+                                    ])
+                                    @endforeach
+                                 
 
 
 
 
 
+
+                                </div>
                             </div>
-                        </div>
+							
                         <div class="m-form__group form-group row">
 
                             <div class="col-lg-12">
@@ -608,6 +610,52 @@
 
 
         </div>
+		
+		
+		@endif 
+		  <div class="row">
+        <div class="col-md-12">
+            <hr class="subtitle-hr">
+        </div>
+        <div class="col-md-12">
+            <div class="d-flex align-items-center ">
+                <h3 class="font-weight-bold form-label kt-subheader__title small-caps sub-title--header mr-5" style=""> {{ __('Add New Data') }} </h3>
+            </div>
+        </div>
+    </div>
+    <div class="row trading-repeater">
+
+        <div class="form-group row" style="flex:1;">
+            <div class="col-md-12 mt-3">
+
+                <div id="m_repeater_2" class="products-repeater">
+                    <div class="form-group  m-form__group row">
+                        <div data-repeater-list="new_tradingRevenueStreams" class="col-lg-12">
+                            @include('admin.financial_plans.form.tradingRevenueStreams-new-data' , [
+                            ])
+                        </div>
+                    </div>
+                    <div class="m-form__group form-group row">
+
+                        <div class="col-lg-12">
+                            <div data-repeater-create="" class="btn btn btn-sm btn-success m-btn m-btn--icon m-btn--pill m-btn--wide {{__('right')}}" id="add-row">
+                                <span>
+                                    <i class="fa fa-plus"> </i>
+                                    <span>
+                                        {{ __('Add') }}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+
+
+                    
+
+
+            </div>
+        </div>
+    </div>
+	
     </div>
 </div>
 
@@ -1036,5 +1084,21 @@
     })
 
 </script>
+<script>
+$('#revenue_streams_id').on('change',function(e){
+	const values = $(this).val()
+	if(values.includes('trading')){
+		$('#trading-id').show()
+	}else{
+		$('#trading-id').hide()
+	}
+	if(values.includes('manufacturing')){
+		$('#manufacturing-id').show()
+	}else{
+		$('#manufacturing-id').hide()
+	}
+})
+$('#revenue_streams_id').trigger('change')
 
+</script>
 @endsection

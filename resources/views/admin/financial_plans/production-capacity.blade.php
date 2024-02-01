@@ -283,7 +283,7 @@
 
                                             <div class="form-group three-dots-parent">
                                                 <div class="input-group input-group-sm align-items-center justify-content-center div-for-percentage">
-                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ number_format($daysCountPerYear['totalOfEachYear'][$year]??0 , 0) }}" readonly onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts only-percentage-allowed size" data-date="#" data-section="target" aria-describedby="basic-addon2">
+                                                    <input type="text" style="max-width: 60px;min-width: 60px;text-align: center" value="{{ number_format($daysCountPerYear['totalOfEachYear'][$year]??0 , 0) }}" readonly onchange="this.style.width = ((this.value.length + 1) * 10) + 'px';" class="form-control target_repeating_amounts  size" data-date="#" data-section="target" aria-describedby="basic-addon2">
                                                     <span class="ml-2">
                                                         {{-- <b style="visibility:hidden">%</b> --}}
                                                     </span>
@@ -826,7 +826,7 @@
                             @endphp
                             <input type="hidden" value="{{ $rowMaterialType }}" name="raw_material_type">
                             <input type="hidden" name="tableIds[]" value="{{ $tableId }}">
-                            <x-tables.repeater-table :repeaterClass="'table-border-color removeGlobalStyle table-bg'" :actionThClass="'text-white'" :removeRepeater="false" :repeater-with-select2="true" :parentClass="'js-toggle-visiability   '" :tableName="$tableId" :repeaterId="$repeaterId" :relationName="'row_materials'" :isRepeater="$isRepeater=!(isset($removeRepeater) && $removeRepeater)">
+                            <x-tables.repeater-table :repeaterClass="'table-border-color removeGlobalStyle table-bg'" :actionThClass="'text-white'" :removeRepeater="false" :repeater-with-select2="true" :parentClass="'   '" :tableName="$tableId" :repeaterId="$repeaterId" :relationName="'row_materials'" :isRepeater="$isRepeater=!(isset($removeRepeater) && $removeRepeater)">
                                 <x-slot name="ths">
                                     <x-tables.repeater-table-th class="col-md-4 text-white" :title="__('Raw Material Name')"></x-tables.repeater-table-th>
                                     <x-tables.repeater-table-th class="col-md-1 text-white" :title="__('Raw Material UOM')" :helperTitle="__('')"></x-tables.repeater-table-th>
@@ -866,18 +866,18 @@
                                         <td>
 
                                             <div class="d-flex align-items-center js-common-parent">
-                                                <input value="{{ isset($subModel) ? $subModel->getQuantity() : null }}" class="form-control js-show-all-categories-popup" @if($isRepeater) name="quantity" @else name="{{ $tableId }}[0][quantity]" @endif type="text">
+                                                <input value="{{ isset($subModel) ? $subModel->getQuantity() : null }}" class="form-control " @if($isRepeater) name="quantity" @else name="{{ $tableId }}[0][quantity]" @endif type="text">
                                                 @include('ul-to-trigger-popup')
                                             </div>
                                         </td>
                                         <td>
-                                            <input value="{{ (isset($subModel) ? number_format($subModel->getWasteRate(),0) : 0) }}" @if($isRepeater) name="waste_rate" @else name="[{{ $tableId }}][0][waste_rate]" @endif class="form-control text-center only-greater-than-or-equal-zero-allowed" type="text">
+                                            <input value="{{ (isset($subModel) ? number_format($subModel->getWasteRate(),0) : 0) }}" @if($isRepeater) name="waste_rate" @else name="[{{ $tableId }}][0][waste_rate]" @endif class="form-control text-center " type="text">
                                             <input type="hidden" value="{{ (isset($subModel) ? $subModel->getWasteRate() : 0) }}" @if($isRepeater) name="waste_rate" @else name="[{{ $tableId }}][0][waste_rate]" @endif>
                                         </td>
 
                                         <td>
 											{{-- auto calculated --}}
-                                            <input readonly value="{{ (isset($subModel) ? number_format($subModel->getTotalQuantity(),0) : 0) }}" @if($isRepeater) name="total_quantity" @else name="[{{ $tableId }}][0][total_quantity]" @endif class="form-control text-center only-greater-than-or-equal-zero-allowed" type="text">
+                                            <input readonly value="{{ (isset($subModel) ? number_format($subModel->getTotalQuantity(),0) : 0) }}" @if($isRepeater) name="total_quantity" @else name="[{{ $tableId }}][0][total_quantity]" @endif class="form-control text-center " type="text">
                                             <input type="hidden" value="{{ (isset($subModel) ? $subModel->getTotalQuantity() : 0) }}" @if($isRepeater) name="total_quantity" @else name="[{{ $tableId }}][0][total_quantity]" @endif>
                                         </td>
 

@@ -364,8 +364,6 @@ trait FinancialPlanAccessor
 		$idsToRemove = array_diff($oldStoredIds , $idsOfRequest);
 		$idsToAdd = array_diff($idsOfRequest , $oldStoredIds );
 		$idsToKeep = array_intersect($oldStoredIds,$idsOfRequest);
-		// dd($oldStoredIds,$idsOfRequest);
-		// dd($itemsFromRequest,$idsOfRequest,$idsToKeep,$idsToAdd);
 		foreach($idsToKeep as $idToKeep){
 			$model = $this->$relationName->where($identifier,$idToKeep)->first() ;
 			$data = searchKeyFromTwoDimArray($itemsFromRequest,$identifier,$idToKeep) ;

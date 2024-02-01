@@ -3258,45 +3258,50 @@ function getDefaultSellingUOM()
 {
 	return [
 		[
-			'title'=>'Ton',
+			'title'=>__('Ton'),
 		'value'=>'Ton'
 		],
 		[
-			'title'=>'Kg',
+			'title'=>__('Kg'),
 		'value'=>'Kg'
 		],
 		[
-			'title'=>'gm',
+			'title'=>__('gm'),
 			'value'=>'gm'
 		],
 		[
-			'title'=>'Carton',
+			'title'=>__('Carton'),
 			'value'=>'carton'
 		],
 		[
-			'title'=>'Box',
+			'title'=>__('Box'),
 			'value'=>'box'
 		],
 		[
-			'title'=>'Piece',
+			'title'=>__('Piece'),
 			'value'=>'piece'
 		],
 		[
-			'title'=>'Barrel',
-			'value'=>'barrel'
+			'title'=>__('Liter'),
+			'value'=>'liter'
 		],
 		[
-			'title'=>'Bottles',
+			'title'=>__('Bottles'),
 			'value'=>'bottles'
 		],
 		[
-			'title'=>'M2',
+			'title'=>__('Barrel'),
+			'value'=>'barrel'
+		],
+		
+		[
+			'title'=>__('Meter Square'),
 			'value'=>'m2'
 		],
 		[
-			'title'=>'M3',
+			'title'=>__('Meter Cube'),
 			'value'=>'m3'
-		]
+		],
 	];
 }
 function getSellingUOM()
@@ -3309,49 +3314,49 @@ function getDefaultProductionUOM()
 }
 function getProductionUOM():array 
 {
-	
-	return [
-		[
-			'title'=>'Ton',
-		'value'=>'Ton'
-		],
-		[
-			'title'=>'Kg',
-		'value'=>'Kg'
-		],
-		[
-			'title'=>'gm',
-			'value'=>'gm'
-		],
-		[
-			'title'=>'Carton',
-			'value'=>'carton'
-		],
-		[
-			'title'=>'Box',
-			'value'=>'box'
-		],
-		[
-			'title'=>'Piece',
-			'value'=>'piece'
-		],
-		[
-			'title'=>'Barrel',
-			'value'=>'barrel'
-		],
-		[
-			'title'=>'Bottles',
-			'value'=>'bottles'
-		],
-		[
-			'title'=>'Meter square',
-			'value'=>'meter-square'
-		],
-		[
-			'title'=>'Meter cube',
-			'value'=>'meter-cube'
-		]
-	];
+	return getDefaultSellingUOM();
+	// return [
+	// 	[
+	// 		'title'=>'Ton',
+	// 	'value'=>'Ton'
+	// 	],
+	// 	[
+	// 		'title'=>'Kg',
+	// 	'value'=>'Kg'
+	// 	],
+	// 	[
+	// 		'title'=>'gm',
+	// 		'value'=>'gm'
+	// 	],
+	// 	[
+	// 		'title'=>'Carton',
+	// 		'value'=>'carton'
+	// 	],
+	// 	[
+	// 		'title'=>'Box',
+	// 		'value'=>'box'
+	// 	],
+	// 	[
+	// 		'title'=>'Piece',
+	// 		'value'=>'piece'
+	// 	],
+	// 	[
+	// 		'title'=>'Barrel',
+	// 		'value'=>'barrel'
+	// 	],
+	// 	[
+	// 		'title'=>'Bottles',
+	// 		'value'=>'bottles'
+	// 	],
+	// 	[
+	// 		'title'=>'Meter square',
+	// 		'value'=>'meter-square'
+	// 	],
+	// 	[
+	// 		'title'=>'Meter cube',
+	// 		'value'=>'meter-cube'
+	// 	]
+	// ];
 	
 }
 function getInventoryCoverageDays()

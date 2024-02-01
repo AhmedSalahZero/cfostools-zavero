@@ -1637,7 +1637,7 @@
     </script>
     <script>
         $(function() {
-            $('.only-month-year-picker').each(function(index, dateInput) {
+			function initialMonthYearPicker(index, dateInput) {
                 var currentDate = $(dateInput).val();
                 var startDate = "{{ isset($studyStartDate) && $studyStartDate ? $studyStartDate : -1 }}";
                 startDate = startDate == '-1' ? '' : startDate;
@@ -1657,7 +1657,10 @@
                     .datepicker('setDate', new Date(currentDate))
                     .datepicker('setStartDate', new Date(startDate))
                     .datepicker('setEndDate', new Date(endDate))
-            })
+            }
+			window['initialMonthYearPicker']=initialMonthYearPicker
+			
+            $('.only-month-year-picker').each(initialMonthYearPicker)
 
 
         });

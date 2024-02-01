@@ -146,7 +146,7 @@ var FormRepeater = (function () {
             show: function () {
                 $(this).slideDown();
 				appendNewOptionsToAllSelects(this);
-				
+				$('.only-month-year-picker').each(initialMonthYearPicker)
             },
 
             hide: function (deleteElement) {
@@ -179,6 +179,7 @@ var FormRepeater = (function () {
 
             show: function () {
                 $(this).slideDown();
+				$('.only-month-year-picker').each(initialMonthYearPicker)
             },
 
             hide: function (deleteElement) {

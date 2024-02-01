@@ -66,12 +66,12 @@
                 $(this).slideDown();      
 				$('input.trigger-change-repeater').trigger('change')   
 				 $(this).find('.only-month-year-picker').each(function(index,dateInput){
-					reinitalizeMonthYearInput(dateInput)
+					//reinitalizeMonthYearInput(dateInput)
 					
 				 });
 				$('input:not([type="hidden"])').trigger('change');
 				$(this).find('.dropdown-toggle').remove();
-				$(this).find('select.repeater-select').selectpicker("refresh");
+				//$(this).find('select.repeater-select').selectpicker("refresh");
 					
             },
 

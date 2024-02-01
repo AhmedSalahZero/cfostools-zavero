@@ -20,11 +20,11 @@
 
 
 				        <div class="col-md-12 ">
-						 <label class="form-label font-weight-bold">{{ __('Category Name') }}
-				            {{-- <span class="is-required">*</span> --}}
-				            @include('star')
-				        </label>
-							  <div class="input-group">
+				            <label class="form-label font-weight-bold">{{ __('Category Name') }}
+				                {{-- <span class="is-required">*</span> --}}
+				                @include('star')
+				            </label>
+				            <div class="input-group">
 				                <input type="text" class="form-control " @if($isRepeater) name="category_name" @else name="manfacturing[0][category_name]" @endif value="" step="any">
 				            </div>
 				            {{-- <x-form.select  :add-new="false" :label="__('Category')" class="select2-select category_class  " data-filter-type="{{ $type }}" :all="false" name="category_id" id="{{$type.'_'.'category_id' }}" :selected-value="isset($manufacturingRevenueStream) ? $manufacturingRevenueStream->getCategoryId() : 0"></x-form.select> --}}
@@ -42,15 +42,15 @@
 					@endif 
 					
 					">
-					
-						 <label class="form-label font-weight-bold">{{ __('Product Name') }}
+
+				        <label class="form-label font-weight-bold">{{ __('Product Name') }}
 				            {{-- <span class="is-required">*</span> --}}
 				            @include('star')
 				        </label>
-							  <div class="input-group">
-				                <input type="text" class="form-control " @if($isRepeater) name="product_name" @else name="manfacturing[0][product_name]" @endif value="" step="any">
-				            </div>
-							
+				        <div class="input-group">
+				            <input type="text" class="form-control " @if($isRepeater) name="product_name" @else name="manfacturing[0][product_name]" @endif value="" step="any">
+				        </div>
+
 				        {{-- <x-form.select :additional-column="'model_type'" :additional-column-value="'TradingRevenueStream'" :add-new-modal="true" :add-new-modal-modal-type="''" :add-new-modal-modal-name="'Product'" :add-new-modal-modal-title="__('Product Name')" :previous-select-name-in-dB="'category_id'" :previous-select-must-be-selected="true" :previous-select-selector="'select.category_class'" :previous-select-title="__('Category')" :options="$products" :add-new="false" :label="__('Product Name')" class="select2-select product_class  " data-filter-type="{{ $type }}" :all="false" name="product_id" id="{{$type.'_'.'product_id' }}" :selected-value="isset($manufacturingRevenueStream) ? $manufacturingRevenueStream->getProductId() : 0"></x-form.select> --}}
 				    </div>
 
@@ -59,8 +59,8 @@
 				    </div>
 
 				    <div class="col-md-2">
-				
-							
+
+
 				        <x-form.select :add-new-modal="true" :add-new-modal-modal-type="''" :add-new-modal-modal-name="'ProductionUnitOfMeasurement'" :add-new-modal-modal-title="__('Production Unit Of Measurement')" :options="$productionUnitOfMeasurements" :add-new="false" :label="__('Production UOM')" class="select2-select production_unit_of_measurement_class  " data-filter-type="{{ $type }}" :all="false" name="production_uom" id="{{$type.'_'.'production_uom' }}" :selected-value="isset($manufacturingRevenueStream) ? $manufacturingRevenueStream->getProductionUOM() : 0"></x-form.select>
 				    </div>
 
@@ -77,7 +77,7 @@
 				        </div>
 				    </div>
 
-				    <x-form.date :parentClasses="'col-md-2 mb-0'" :readonly="false" :required="true" :id="$type.'_'.'product_selling_date'" :label="__('Selling Start Date')" :name="'selling_start_date'" :value="isset($manufacturingRevenueStream) ? $manufacturingRevenueStream->getSellingStartDate() : getCurrentDateForFormDate('date') " :inputClasses="''"></x-form.date>
+				    <x-form.date :inputClasses="'only-month-year-picker'" :parentClasses="'col-md-2 mb-0'" :readonly="false" :required="true" :id="$type.'_'.'new_product_selling_date'" :label="__('Selling Start Date')" :name="'selling_start_date'" :value="isset($manufacturingRevenueStream) ? $manufacturingRevenueStream->getSellingStartDate() : getCurrentDateForFormDate('date') " :inputClasses="''"></x-form.date>
 
 				    @if($isRepeater)
 				    <div class="">
